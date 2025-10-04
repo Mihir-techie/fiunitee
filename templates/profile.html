@@ -1,0 +1,650 @@
+{% extends "base.html" %}
+{% block title %}Profile - Fiunite{% endblock %}
+{% block description %}View and edit your profile information on Fiunite.{% endblock %}
+
+{% block extra_css %}
+<style>
+  body {
+    background: #FFFFFF;
+    position: relative;
+    width: 440px;
+    height: 956px;
+    margin: 0 auto;
+    padding-bottom: 86px;
+  }
+
+  .profile-screen {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background: #FFFFFF;
+    padding: 0 24px;
+  }
+
+  /* Back Button */
+  .back-button {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    left: 24px;
+    top: 66px;
+    cursor: pointer;
+    z-index: 10;
+  }
+
+  .back-button::after {
+    content: '';
+    position: absolute;
+    left: 19.53%;
+    right: 19.53%;
+    top: 21.88%;
+    bottom: 21.88%;
+    border: 2px solid var(--text-primary);
+    border-radius: 2px;
+  }
+
+  /* Title */
+  .title {
+    position: absolute;
+    width: 96px;
+    height: 40px;
+    left: 60px;
+    top: 58px;
+    font-family: 'Outfit', sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 40px;
+    text-align: center;
+    color: var(--text-primary);
+  }
+
+  /* Profile Image */
+  .profile-image {
+    position: absolute;
+    width: 118px;
+    height: 118px;
+    left: 24px;
+    top: 122px;
+    background: var(--primary-gradient);
+    border-radius: 59px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 48px;
+    border: 4px solid white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Profile Info */
+  .profile-info {
+    position: absolute;
+    width: 143px;
+    height: 54px;
+    left: 158px;
+    top: 154px;
+  }
+
+  .profile-name {
+    width: 100%;
+    height: 30px;
+    font-family: 'Outfit', sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 30px;
+    text-align: center;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+
+  .profile-occupation {
+    width: 100%;
+    height: 18px;
+    font-family: 'Outfit', sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+    color: var(--text-secondary);
+  }
+
+  /* Divider Line */
+  .divider-line {
+    position: absolute;
+    width: 440px;
+    height: 0px;
+    left: 0;
+    top: 252px;
+    opacity: 0.5;
+    border: 2px solid var(--bg-grey);
+  }
+
+  /* Profile Details */
+  .profile-details {
+    position: absolute;
+    width: 392px;
+    height: 606px;
+    left: 24px;
+    top: 264px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .profile-detail {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0;
+    gap: 12px;
+    width: 392px;
+    height: 61px;
+  }
+
+  .detail-icon {
+    width: 24px;
+    height: 24px;
+    position: relative;
+    flex: none;
+  }
+
+  .detail-icon::after {
+    content: '';
+    position: absolute;
+    background: var(--text-light);
+  }
+
+  .detail-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0;
+    gap: 12px;
+    width: 356px;
+    height: 61px;
+  }
+
+  .detail-label {
+    width: 100%;
+    height: 18px;
+    font-family: 'Outfit', sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+    color: var(--text-light);
+  }
+
+  .detail-value {
+    width: 100%;
+    height: 25px;
+    font-family: 'Outfit', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 25px;
+    color: var(--text-primary);
+  }
+
+  .detail-divider {
+    width: 356px;
+    height: 0px;
+    opacity: 0.5;
+    border: 2px solid var(--bg-grey);
+  }
+
+  /* Icon Styles */
+  .icon-filter::after {
+    left: 8.33%;
+    right: 8.34%;
+    top: 12.5%;
+    bottom: 8.33%;
+    border: 2px solid var(--text-light);
+  }
+
+  .icon-calendar::after {
+    left: 8.33%;
+    right: 8.33%;
+    top: 8.33%;
+    bottom: 8.33%;
+    background: var(--text-light);
+  }
+
+  .icon-work::after {
+    left: 8.33%;
+    right: 8.33%;
+    top: 12.5%;
+    bottom: 12.5%;
+    border: 2px solid var(--text-light);
+  }
+
+  .icon-profile::after {
+    left: 16.67%;
+    right: 16.67%;
+    top: 16.67%;
+    bottom: 16.67%;
+    border: 2px solid var(--text-light);
+  }
+
+  .icon-personality::after {
+    left: 8.33%;
+    right: 8.33%;
+    top: 12.16%;
+    bottom: 12.17%;
+    background: var(--text-light);
+  }
+
+  .icon-language::after {
+    left: 5.55%;
+    right: 8.34%;
+    top: 8.33%;
+    bottom: 10.83%;
+    background: var(--text-light);
+  }
+
+  .icon-mind::after {
+    left: 8.33%;
+    right: 12.5%;
+    top: 12.5%;
+    bottom: 12.5%;
+    background: var(--text-light);
+  }
+
+  .icon-zodiac::after {
+    left: 8.33%;
+    right: 8.33%;
+    top: 12.5%;
+    bottom: 12.5%;
+    border: 1.5px solid var(--text-light);
+  }
+
+  .icon-preference::after {
+    left: 12.5%;
+    right: 12.5%;
+    top: 8.33%;
+    bottom: 12.5%;
+    border: 1.5px solid var(--text-light);
+  }
+
+  .icon-religion::after {
+    left: 13.75%;
+    right: 13.75%;
+    top: 8.33%;
+    bottom: 8.33%;
+    background: var(--text-light);
+  }
+
+  .icon-international::after {
+    left: 8.33%;
+    right: 8.33%;
+    top: 8.33%;
+    bottom: 8.33%;
+    border: 2px solid var(--text-light);
+  }
+
+  .icon-relationship::after {
+    left: 4.17%;
+    right: 4.17%;
+    top: 27.08%;
+    bottom: 27.08%;
+    background: var(--text-light);
+  }
+
+  /* Bottom Navigation */
+  .bottom-nav {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 20px 0px 2px;
+    gap: 6px;
+    width: 440px;
+    height: 86px;
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #FFFFFF;
+    box-shadow: 0px -4px 12px rgba(0, 0, 0, 0.06);
+    border-radius: 20px 20px 0px 0px;
+    z-index: 1000;
+  }
+
+  .nav-items {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0;
+    gap: 20px;
+    width: 412px;
+    height: 24px;
+  }
+
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    gap: 6px;
+    width: 64px;
+    height: 24px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+
+  .nav-item:hover {
+    transform: scale(1.1);
+  }
+
+  .nav-item.active {
+    transform: scale(1.1);
+  }
+
+  .nav-icon {
+    width: 24px;
+    height: 24px;
+    position: relative;
+  }
+
+  .nav-icon::after {
+    content: '';
+    position: absolute;
+    left: 12.5%;
+    right: 12.5%;
+    top: 12.5%;
+    bottom: 12.5%;
+    border: 1.8px solid var(--text-secondary);
+  }
+
+  .nav-item.active .nav-icon::after {
+    border-color: var(--primary);
+  }
+
+  .nav-item.user .nav-icon::after {
+    border: none;
+    background: var(--primary-gradient);
+    border-radius: 50%;
+    left: 25%;
+    right: 25%;
+    top: 25%;
+    bottom: 25%;
+  }
+
+  /* Home Indicator */
+  .home-indicator {
+    width: 134px;
+    height: 5px;
+    background: var(--text-primary);
+    border-radius: 100px;
+    margin-top: 6px;
+  }
+
+  @media (max-width: 768px) {
+    body {
+      width: 100%;
+      max-width: 440px;
+    }
+    
+    .profile-screen {
+      padding: 0 16px;
+    }
+    
+    .title {
+      left: 50%;
+      transform: translateX(-50%);
+      width: auto;
+    }
+    
+    .profile-info {
+      left: 50%;
+      transform: translateX(-50%);
+      width: auto;
+      text-align: center;
+    }
+    
+    .profile-details {
+      width: 100%;
+      max-width: 392px;
+    }
+    
+    .profile-detail {
+      width: 100%;
+      max-width: 392px;
+    }
+    
+    .detail-content {
+      width: 100%;
+      max-width: 356px;
+    }
+    
+    .bottom-nav {
+      width: 100%;
+      max-width: 440px;
+    }
+    
+    .nav-items {
+      width: 100%;
+      max-width: 412px;
+      justify-content: space-around;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-screen">
+  <!-- Back Button -->
+  <div class="back-button" onclick="window.history.back()"></div>
+  
+  <!-- Title -->
+  <h1 class="title">Profile</h1>
+  
+  <!-- Profile Image -->
+  <div class="profile-image">U</div>
+  
+  <!-- Profile Info -->
+  <div class="profile-info">
+    <div class="profile-name">User Name</div>
+    <div class="profile-occupation">Software Developer</div>
+  </div>
+  
+  <!-- Divider Line -->
+  <div class="divider-line"></div>
+  
+  <!-- Profile Details -->
+  <div class="profile-details">
+    <!-- Filter -->
+    <div class="profile-detail">
+      <div class="detail-icon icon-filter"></div>
+      <div class="detail-content">
+        <div class="detail-label">Filter</div>
+        <div class="detail-value">All Categories</div>
+        <div class="detail-divider"></div>
+      </div>
+    </div>
+    
+    <!-- Age -->
+    <div class="profile-detail">
+      <div class="detail-icon icon-calendar"></div>
+      <div class="detail-content">
+        <div class="detail-label">Age</div>
+        <div class="detail-value">25</div>
+        <div class="detail-divider"></div>
+      </div>
+    </div>
+    
+    <!-- Work -->
+    <div class="profile-detail">
+      <div class="detail-icon icon-work"></div>
+      <div class="detail-content">
+        <div class="detail-label">Work</div>
+        <div class="detail-value">Tech</div>
+        <div class="detail-divider"></div>
+      </div>
+    </div>
+    
+    <!-- Profile -->
+    <div class="profile-detail">
+      <div class="detail-icon icon-profile"></div>
+      <div class="detail-content">
+        <div class="detail-label">Profile</div>
+        <div class="detail-value">Public</div>
+        <div class="detail-divider"></div>
+      </div>
+    </div>
+    
+    <!-- Personality -->
+    <div class="profile-detail">
+      <div class="detail-icon icon-personality"></div>
+      <div class="detail-content">
+        <div class="detail-label">Personality</div>
+        <div class="detail-value">Geeky</div>
+        <div class="detail-divider"></div>
+      </div>
+    </div>
+    
+    <!-- Language -->
+    <div class="profile-detail">
+      <div class="detail-icon icon-language"></div>
+      <div class="detail-content">
+        <div class="detail-label">Language</div>
+        <div class="detail-value">English, Spanish</div>
+        <div class="detail-divider"></div>
+      </div>
+    </div>
+    
+    <!-- Mind -->
+    <div class="profile-detail">
+      <div class="detail-icon icon-mind"></div>
+      <div class="detail-content">
+        <div class="detail-label">Mind</div>
+        <div class="detail-value">Analytical</div>
+        <div class="detail-divider"></div>
+      </div>
+    </div>
+    
+    <!-- Zodiac -->
+    <div class="profile-detail">
+      <div class="detail-icon icon-zodiac"></div>
+      <div class="detail-content">
+        <div class="detail-label">Zodiac</div>
+        <div class="detail-value">Virgo</div>
+        <div class="detail-divider"></div>
+      </div>
+    </div>
+    
+    <!-- Preference -->
+    <div class="profile-detail">
+      <div class="detail-icon icon-preference"></div>
+      <div class="detail-content">
+        <div class="detail-label">Preference</div>
+        <div class="detail-value">Flexible</div>
+        <div class="detail-divider"></div>
+      </div>
+    </div>
+    
+    <!-- Religion -->
+    <div class="profile-detail">
+      <div class="detail-icon icon-religion"></div>
+      <div class="detail-content">
+        <div class="detail-label">Religion</div>
+        <div class="detail-value">Open</div>
+        <div class="detail-divider"></div>
+      </div>
+    </div>
+    
+    <!-- International -->
+    <div class="profile-detail">
+      <div class="detail-icon icon-international"></div>
+      <div class="detail-content">
+        <div class="detail-label">International</div>
+        <div class="detail-value">Yes</div>
+        <div class="detail-divider"></div>
+      </div>
+    </div>
+    
+    <!-- Relationship -->
+    <div class="profile-detail">
+      <div class="detail-icon icon-relationship"></div>
+      <div class="detail-content">
+        <div class="detail-label">Relationship</div>
+        <div class="detail-value">Single</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+  <div class="nav-items">
+    <div class="nav-item" onclick="window.location.href='/vibe'">
+      <div class="nav-icon"></div>
+    </div>
+    <div class="nav-item" onclick="window.location.href='/vibe_form'">
+      <div class="nav-icon"></div>
+    </div>
+    <div class="nav-item" onclick="window.location.href='/map_view'">
+      <div class="nav-icon"></div>
+    </div>
+    <div class="nav-item" onclick="window.location.href='/vibe'">
+      <div class="nav-icon"></div>
+    </div>
+    <div class="nav-item active" onclick="window.location.href='/profile'">
+      <div class="nav-icon user"></div>
+    </div>
+  </div>
+  <div class="home-indicator"></div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add click animations to profile details
+    document.querySelectorAll('.profile-detail').forEach(detail => {
+      detail.addEventListener('click', function() {
+        this.style.transform = 'scale(0.98)';
+        setTimeout(() => {
+          this.style.transform = '';
+        }, 150);
+      });
+    });
+    
+    // Add hover effects to navigation items
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('mouseenter', function() {
+        if (!this.classList.contains('active')) {
+          this.style.transform = 'scale(1.1)';
+        }
+      });
+      
+      item.addEventListener('mouseleave', function() {
+        if (!this.classList.contains('active')) {
+          this.style.transform = 'scale(1)';
+        }
+      });
+    });
+    
+    // Add scroll animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    document.querySelectorAll('.profile-detail').forEach(detail => {
+      detail.style.opacity = '0';
+      detail.style.transform = 'translateY(20px)';
+      detail.style.transition = 'all 0.3s ease';
+      observer.observe(detail);
+    });
+  });
+</script>
+{% endblock %}

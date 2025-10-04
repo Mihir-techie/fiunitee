@@ -10,123 +10,35 @@
     <meta name="keywords" content="social, networking, vibes, activities, friends, connection">
     <meta name="author" content="Fiunite">
     
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ request.url }}">
-    <meta property="og:title" content="{% block og_title %}{{ self.title() }}{% endblock %}">
-    <meta property="og:description" content="{% block og_description %}{{ self.description() }}{% endblock %}">
-    <meta property="og:image" content="{% block og_image %}{{ url_for('static', filename='images/og-image.jpg') }}{% endblock %}">
-    
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="{{ request.url }}">
-    <meta property="twitter:title" content="{% block twitter_title %}{{ self.title() }}{% endblock %}">
-    <meta property="twitter:description" content="{% block twitter_description %}{{ self.description() }}{% endblock %}">
-    <meta property="twitter:image" content="{% block twitter_image %}{{ url_for('static', filename='images/og-image.jpg') }}{% endblock %}">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='images/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='images/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='images/favicon-16x16.png') }}">
-    
     <!-- Stylesheets -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     
     <!-- Additional CSS -->
     {% block extra_css %}{% endblock %}
-    
-    <!-- Structured Data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "Fiunite",
-        "description": "Connect through vibes and activities",
-        "url": "{{ request.url_root }}"
-    }
-    </script>
 </head>
 <body>
-    <!-- Floating Background Elements -->
-    <div class="floating-elements">
-        <div class="floating-element"></div>
-        <div class="floating-element"></div>
-        <div class="floating-element"></div>
-    </div>
-    
-    <!-- Navigation -->
-    {% block navigation %}
-    <nav class="navbar">
-        <div class="container flex items-center justify-between p-4">
-            <a href="{{ url_for('splash') }}" class="navbar-brand">
-                <i class="fas fa-heart"></i> Fiunite
-            </a>
-            
-            {% if session.user_id %}
-            <div class="navbar-nav flex">
-                <a href="{{ url_for('vibe_form') }}" class="navbar-link">
-                    <i class="fas fa-plus-circle"></i> Set Vibe
-                </a>
-                <a href="{{ url_for('vibe') }}" class="navbar-link">
-                    <i class="fas fa-search"></i> Find Vibes
-                </a>
-                <a href="{{ url_for('logout') }}" class="navbar-link">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </a>
-            </div>
-            {% else %}
-            <div class="navbar-nav flex">
-                <a href="{{ url_for('login') }}" class="navbar-link">
-                    <i class="fas fa-sign-in-alt"></i> Login
-                </a>
-                <a href="{{ url_for('signup') }}" class="navbar-link">
-                    <i class="fas fa-user-plus"></i> Sign Up
-                </a>
-            </div>
-            {% endif %}
+    <!-- Status Bar -->
+    <div class="status-bar" style="position: absolute; top: 16px; left: 50%; transform: translateX(-50%); z-index: 1000;">
+        <div class="time-style">
+            <div class="time">9:41</div>
         </div>
-    </nav>
-    {% endblock %}
+        <div class="status-icons">
+            <div style="width: 17.3px; height: 12.13px; background: var(--status-black);"></div>
+            <div style="width: 15.44px; height: 12.23px; background: var(--status-black);"></div>
+            <div style="width: 24.53px; height: 13.14px; position: relative;">
+                <div style="position: absolute; left: 65.58%; right: 2.82%; top: 0%; bottom: 0%; border: 1px solid var(--status-grey); border-radius: 4.3px; opacity: 0.35;"></div>
+                <div style="position: absolute; left: 67.86%; right: 5.6%; top: 15.39%; bottom: 15.38%; background: var(--status-black); border-radius: 2.5px;"></div>
+            </div>
+        </div>
+    </div>
     
     <!-- Main Content -->
     <main>
         {% block content %}{% endblock %}
     </main>
     
-    <!-- Footer -->
-    {% block footer %}
-    <footer style="background: var(--bg-dark); color: var(--text-white); padding: var(--space-2xl) 0; margin-top: var(--space-3xl);">
-        <div class="container text-center">
-            <div class="mb-4">
-                <h3 style="color: var(--text-white); margin-bottom: var(--space-md);">
-                    <i class="fas fa-heart"></i> Fiunite
-                </h3>
-                <p style="color: var(--text-light); max-width: 600px; margin: 0 auto;">
-                    Connect with people who share your vibes. Discover activities, make friends, and create meaningful connections.
-                </p>
-            </div>
-            
-            <div class="flex justify-center items-center gap-6 mb-4">
-                <a href="/about" style="color: var(--text-light);">
-                    <i class="fas fa-info-circle"></i> About
-                </a>
-                <a href="#" style="color: var(--text-light);">
-                    <i class="fas fa-shield-alt"></i> Privacy
-                </a>
-                <a href="#" style="color: var(--text-light);">
-                    <i class="fas fa-file-contract"></i> Terms
-                </a>
-                <a href="#" style="color: var(--text-light);">
-                    <i class="fas fa-envelope"></i> Contact
-                </a>
-            </div>
-            
-            <div style="border-top: 1px solid #374151; padding-top: var(--space-lg); color: var(--text-light);">
-                <p>&copy; 2024 Fiunite. Made with <i class="fas fa-heart" style="color: var(--secondary);"></i> for connecting people.</p>
-            </div>
-        </div>
-    </footer>
+    <!-- Bottom Navigation (for profile pages) -->
+    {% block bottom_nav %}
     {% endblock %}
     
     <!-- JavaScript -->
@@ -151,7 +63,7 @@
                 const submitBtn = this.querySelector('button[type="submit"]');
                 if (submitBtn) {
                     const originalText = submitBtn.innerHTML;
-                    submitBtn.innerHTML = '<span class="loading"></span> Processing...';
+                    submitBtn.innerHTML = 'Processing...';
                     submitBtn.disabled = true;
                     
                     // Re-enable after 5 seconds as fallback
@@ -178,26 +90,8 @@
         }, observerOptions);
         
         // Observe all cards and sections
-        document.querySelectorAll('.card, .hero, section').forEach(el => {
+        document.querySelectorAll('.card, section').forEach(el => {
             observer.observe(el);
-        });
-        
-        // Mobile menu toggle (if needed)
-        function toggleMobileMenu() {
-            const nav = document.querySelector('.navbar-nav');
-            if (nav) {
-                nav.classList.toggle('mobile-open');
-            }
-        }
-        
-        // Add click outside to close mobile menu
-        document.addEventListener('click', function(e) {
-            const nav = document.querySelector('.navbar-nav');
-            const menuBtn = document.querySelector('.mobile-menu-btn');
-            
-            if (nav && menuBtn && !nav.contains(e.target) && !menuBtn.contains(e.target)) {
-                nav.classList.remove('mobile-open');
-            }
         });
     </script>
     

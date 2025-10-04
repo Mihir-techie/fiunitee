@@ -1,0 +1,439 @@
+{% extends "base.html" %}
+{% block title %}Map View - Fiunite{% endblock %}
+{% block description %}Discover people near you and find local vibe matches on the map.{% endblock %}
+
+{% block extra_css %}
+<style>
+  body {
+    background: #FFFFFF;
+    position: relative;
+    width: 442px;
+    height: 956px;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+
+  .map-screen {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: #FFFFFF;
+  }
+
+  /* Map Background */
+  .map {
+    position: absolute;
+    width: 442px;
+    height: 956px;
+    left: 0;
+    top: 0;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #bae6fd 100%);
+    background-image: 
+      radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 40% 80%, rgba(245, 135, 79, 0.1) 0%, transparent 50%);
+  }
+
+  /* Back Button */
+  .back-button {
+    position: absolute;
+    width: 42px;
+    height: 42px;
+    left: 15px;
+    top: 166px;
+    background: #FFFFFF;
+    box-shadow: 0px -1px 4px rgba(0, 0, 0, 0.06), 0px 4px 6px rgba(0, 0, 0, 0.12);
+    border-radius: 34px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all var(--transition-normal);
+  }
+
+  .back-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .back-button::after {
+    content: '';
+    position: absolute;
+    left: 19.53%;
+    right: 19.53%;
+    top: 21.88%;
+    bottom: 21.88%;
+    border: 2px solid var(--text-primary);
+    border-radius: 2px;
+  }
+
+  /* Map Elements */
+  .map-elements {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+  }
+
+  .location-marker {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: var(--primary-gradient);
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    animation: pulse 2s infinite;
+  }
+
+  .location-marker:nth-child(1) {
+    left: 30%;
+    top: 25%;
+  }
+
+  .location-marker:nth-child(2) {
+    left: 60%;
+    top: 35%;
+  }
+
+  .location-marker:nth-child(3) {
+    left: 45%;
+    top: 55%;
+  }
+
+  .location-marker:nth-child(4) {
+    left: 70%;
+    top: 65%;
+  }
+
+  .location-marker:nth-child(5) {
+    left: 25%;
+    top: 70%;
+  }
+
+  .location-marker:nth-child(6) {
+    left: 55%;
+    top: 80%;
+  }
+
+  /* Map UI Elements */
+  .map-ui {
+    position: absolute;
+    width: 100px;
+    height: 15px;
+    right: 16px;
+    top: 18px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    padding: 4px 8px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 12px;
+    color: var(--text-primary);
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .map-ui-bottom {
+    position: absolute;
+    width: 72px;
+    height: 17px;
+    left: 2px;
+    top: 15px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 0px 0px 5px 0px;
+    padding: 2px 6px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 10px;
+    color: var(--text-primary);
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  /* User Profile Image */
+  .user-profile {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    right: 16px;
+    top: 66px;
+    background: var(--primary-gradient);
+    border-radius: 59px;
+    border: 2px solid white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  /* Map Controls */
+  .map-controls {
+    position: absolute;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 10;
+  }
+
+  .map-control-btn {
+    width: 48px;
+    height: 48px;
+    background: white;
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+  }
+
+  .map-control-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .map-control-btn::after {
+    content: '';
+    width: 20px;
+    height: 20px;
+    background: var(--text-primary);
+    border-radius: 2px;
+  }
+
+  /* Location Info Panel */
+  .location-info {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    transform: translateY(100%);
+    transition: transform var(--transition-normal);
+    z-index: 10;
+  }
+
+  .location-info.show {
+    transform: translateY(0);
+  }
+
+  .location-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+
+  .location-description {
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+  }
+
+  .location-stats {
+    display: flex;
+    gap: 16px;
+  }
+
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .stat-number {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--text-primary);
+  }
+
+  .stat-label {
+    font-family: 'Outfit', sans-serif;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  @media (max-width: 768px) {
+    body {
+      width: 100%;
+      max-width: 442px;
+    }
+    
+    .map {
+      width: 100%;
+      height: 100vh;
+    }
+    
+    .back-button {
+      left: 12px;
+    }
+    
+    .map-ui {
+      right: 12px;
+    }
+    
+    .map-ui-bottom {
+      left: 12px;
+    }
+    
+    .user-profile {
+      right: 12px;
+    }
+    
+    .location-info {
+      left: 12px;
+      right: 12px;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="map-screen">
+  <!-- Map Background -->
+  <div class="map"></div>
+  
+  <!-- Map Elements -->
+  <div class="map-elements">
+    <div class="location-marker"></div>
+    <div class="location-marker"></div>
+    <div class="location-marker"></div>
+    <div class="location-marker"></div>
+    <div class="location-marker"></div>
+    <div class="location-marker"></div>
+  </div>
+  
+  <!-- Map UI Elements -->
+  <div class="map-ui">Map</div>
+  <div class="map-ui-bottom">Location</div>
+  
+  <!-- User Profile -->
+  <div class="user-profile">U</div>
+  
+  <!-- Back Button -->
+  <div class="back-button" onclick="window.history.back()"></div>
+  
+  <!-- Map Controls -->
+  <div class="map-controls">
+    <div class="map-control-btn" onclick="zoomIn()"></div>
+    <div class="map-control-btn" onclick="zoomOut()"></div>
+    <div class="map-control-btn" onclick="centerMap()"></div>
+  </div>
+  
+  <!-- Location Info Panel -->
+  <div class="location-info" id="locationInfo">
+    <div class="location-title">Your Area</div>
+    <div class="location-description">Find people with similar vibes near you</div>
+    <div class="location-stats">
+      <div class="stat-item">
+        <div class="stat-number">12</div>
+        <div class="stat-label">Active Users</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">5</div>
+        <div class="stat-label">Vibe Matches</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">3</div>
+        <div class="stat-label">Nearby Events</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Show location info after a delay
+    setTimeout(() => {
+      document.getElementById('locationInfo').classList.add('show');
+    }, 1000);
+    
+    // Add click events to location markers
+    document.querySelectorAll('.location-marker').forEach((marker, index) => {
+      marker.addEventListener('click', function() {
+        // Remove active class from all markers
+        document.querySelectorAll('.location-marker').forEach(m => m.classList.remove('active'));
+        
+        // Add active class to clicked marker
+        this.classList.add('active');
+        
+        // Update location info
+        const locationInfo = document.getElementById('locationInfo');
+        const locations = [
+          { title: 'Downtown Area', description: 'Tech enthusiasts and creative minds', users: 8, matches: 3, events: 2 },
+          { title: 'University District', description: 'Students and young professionals', users: 15, matches: 6, events: 4 },
+          { title: 'Arts Quarter', description: 'Artists and creative professionals', users: 6, matches: 2, events: 1 },
+          { title: 'Business District', description: 'Professionals and entrepreneurs', users: 10, matches: 4, events: 3 },
+          { title: 'Residential Area', description: 'Families and local community', users: 12, matches: 5, events: 2 },
+          { title: 'Park District', description: 'Nature lovers and outdoor enthusiasts', users: 9, matches: 3, events: 2 }
+        ];
+        
+        const location = locations[index];
+        locationInfo.querySelector('.location-title').textContent = location.title;
+        locationInfo.querySelector('.location-description').textContent = location.description;
+        locationInfo.querySelectorAll('.stat-number')[0].textContent = location.users;
+        locationInfo.querySelectorAll('.stat-number')[1].textContent = location.matches;
+        locationInfo.querySelectorAll('.stat-number')[2].textContent = location.events;
+        
+        // Show location info
+        locationInfo.classList.add('show');
+      });
+    });
+    
+    // Add hover effects to markers
+    document.querySelectorAll('.location-marker').forEach(marker => {
+      marker.addEventListener('mouseenter', function() {
+        this.style.transform = 'scale(1.2)';
+      });
+      
+      marker.addEventListener('mouseleave', function() {
+        this.style.transform = 'scale(1)';
+      });
+    });
+  });
+  
+  // Map control functions
+  function zoomIn() {
+    console.log('Zooming in...');
+    // Add zoom in animation
+    document.querySelector('.map').style.transform = 'scale(1.1)';
+    setTimeout(() => {
+      document.querySelector('.map').style.transform = 'scale(1)';
+    }, 300);
+  }
+  
+  function zoomOut() {
+    console.log('Zooming out...');
+    // Add zoom out animation
+    document.querySelector('.map').style.transform = 'scale(0.9)';
+    setTimeout(() => {
+      document.querySelector('.map').style.transform = 'scale(1)';
+    }, 300);
+  }
+  
+  function centerMap() {
+    console.log('Centering map...');
+    // Add center animation
+    document.querySelector('.map').style.transform = 'translate(-50%, -50%)';
+    setTimeout(() => {
+      document.querySelector('.map').style.transform = 'translate(0, 0)';
+    }, 300);
+  }
+</script>
+{% endblock %}

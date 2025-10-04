@@ -112,6 +112,7 @@ def verify_success_page():
 @app.route('/verify_otp', methods=["GET","POST"])
 def verify_otp_page():
     if request.method == "POST":
+
         otp = request.form['otp']
         email = session.get('otp_email')
         if email in email_otps and email_otps[email] == otp:
@@ -214,6 +215,18 @@ def vibe():
     data = c.fetchall()
     conn.close()
     return render_template("vibe.html", vibes=data)
+
+@app.route('/map_view')
+def map_view():
+    if 'user_id' not in session:
+        return redirect(url_for("login"))
+    return render_template("map_view.html")
+
+@app.route('/profile')
+def profile():
+    if 'user_id' not in session:
+        return redirect(url_for("login"))
+    return render_template("profile.html")
 
 @app.route('/logout')
 def logout():
