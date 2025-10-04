@@ -1,439 +1,714 @@
 {% extends "base.html" %}
 {% block title %}Map View - Fiunite{% endblock %}
-{% block description %}Discover people near you and find local vibe matches on the map.{% endblock %}
+{% block description %}Discover people and activities near you on the Fiunite map.{% endblock %}
 
 {% block extra_css %}
 <style>
   body {
-    background: #FFFFFF;
-    position: relative;
-    width: 442px;
-    height: 956px;
+    background: var(--bg-gradient);
+    min-height: 100vh;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .map-container {
+    max-width: 1200px;
     margin: 0 auto;
+    background: white;
+    min-height: 100vh;
+    position: relative;
+  }
+  
+  .map-header {
+    background: var(--bg-gradient);
+    padding: 1.5rem;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow-lg);
+  }
+  
+  .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .back-button {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    backdrop-filter: blur(10px);
+  }
+  
+  .back-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+  }
+  
+  .map-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+  }
+  
+  .map-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .map-btn {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    backdrop-filter: blur(10px);
+    border: none;
+    color: white;
+  }
+  
+  .map-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+  }
+  
+  .map-content {
+    padding: 1.5rem;
+  }
+  
+  .map-placeholder {
+    height: 400px;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-xl);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-bottom: 2rem;
+    border: 2px dashed var(--bg-tertiary);
+    position: relative;
     overflow: hidden;
   }
-
-  .map-screen {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    background: #FFFFFF;
-  }
-
-  /* Map Background */
-  .map {
-    position: absolute;
-    width: 442px;
-    height: 956px;
-    left: 0;
-    top: 0;
-    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #bae6fd 100%);
-    background-image: 
-      radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 80% 70%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 40% 80%, rgba(245, 135, 79, 0.1) 0%, transparent 50%);
-  }
-
-  /* Back Button */
-  .back-button {
-    position: absolute;
-    width: 42px;
-    height: 42px;
-    left: 15px;
-    top: 166px;
-    background: #FFFFFF;
-    box-shadow: 0px -1px 4px rgba(0, 0, 0, 0.06), 0px 4px 6px rgba(0, 0, 0, 0.12);
-    border-radius: 34px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    z-index: 10;
-    transition: all var(--transition-normal);
-  }
-
-  .back-button:hover {
-    transform: scale(1.05);
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
-  }
-
-  .back-button::after {
+  
+  .map-placeholder::before {
     content: '';
     position: absolute;
-    left: 19.53%;
-    right: 19.53%;
-    top: 21.88%;
-    bottom: 21.88%;
-    border: 2px solid var(--text-primary);
-    border-radius: 2px;
-  }
-
-  /* Map Elements */
-  .map-elements {
-    position: absolute;
-    width: 100%;
-    height: 100%;
     top: 0;
     left: 0;
-    pointer-events: none;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23e5e7eb" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    opacity: 0.5;
   }
-
-  .location-marker {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background: var(--primary-gradient);
+  
+  .map-placeholder-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    color: var(--text-secondary);
+  }
+  
+  .map-icon {
+    font-size: 3rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+  }
+  
+  .map-placeholder-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+  }
+  
+  .map-placeholder-text {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  
+  .nearby-section {
+    margin-bottom: 2rem;
+  }
+  
+  .section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .section-icon {
+    width: 24px;
+    height: 24px;
+    background: var(--bg-gradient);
     border-radius: 50%;
-    border: 3px solid white;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    animation: pulse 2s infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: white;
   }
-
-  .location-marker:nth-child(1) {
-    left: 30%;
-    top: 25%;
+  
+  .filters {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
   }
-
-  .location-marker:nth-child(2) {
-    left: 60%;
-    top: 35%;
+  
+  .filter-btn {
+    padding: 0.5rem 1rem;
+    border: 2px solid var(--bg-tertiary);
+    border-radius: var(--radius-full);
+    background: white;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-normal);
   }
-
-  .location-marker:nth-child(3) {
-    left: 45%;
-    top: 55%;
+  
+  .filter-btn:hover,
+  .filter-btn.active {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: white;
+    transform: translateY(-1px);
   }
-
-  .location-marker:nth-child(4) {
-    left: 70%;
-    top: 65%;
+  
+  .people-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
   }
-
-  .location-marker:nth-child(5) {
-    left: 25%;
-    top: 70%;
+  
+  .person-card {
+    background: white;
+    border-radius: var(--radius-xl);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--bg-tertiary);
+    transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
   }
-
-  .location-marker:nth-child(6) {
-    left: 55%;
-    top: 80%;
+  
+  .person-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary);
   }
-
-  /* Map UI Elements */
-  .map-ui {
+  
+  .person-card::before {
+    content: '';
     position: absolute;
-    width: 100px;
-    height: 15px;
-    right: 16px;
-    top: 18px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 8px;
-    padding: 4px 8px;
-    font-family: 'Outfit', sans-serif;
-    font-size: 12px;
-    color: var(--text-primary);
-    text-align: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--bg-gradient);
   }
-
-  .map-ui-bottom {
-    position: absolute;
-    width: 72px;
-    height: 17px;
-    left: 2px;
-    top: 15px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 0px 0px 5px 0px;
-    padding: 2px 6px;
-    font-family: 'Outfit', sans-serif;
-    font-size: 10px;
-    color: var(--text-primary);
-    text-align: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
+  .person-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
   }
-
-  /* User Profile Image */
-  .user-profile {
-    position: absolute;
-    width: 32px;
-    height: 32px;
-    right: 16px;
-    top: 66px;
-    background: var(--primary-gradient);
-    border-radius: 59px;
-    border: 2px solid white;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  
+  .person-avatar {
+    width: 50px;
+    height: 50px;
+    background: var(--bg-gradient);
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    margin-right: 1rem;
+    box-shadow: var(--shadow-md);
+  }
+  
+  .person-info {
+    flex: 1;
+  }
+  
+  .person-name {
+    font-size: 1rem;
     font-weight: 600;
-    font-size: 14px;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
   }
-
-  /* Map Controls */
-  .map-controls {
-    position: absolute;
-    bottom: 100px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 12px;
-    z-index: 10;
+  
+  .person-distance {
+    font-size: 0.875rem;
+    color: var(--text-light);
   }
-
-  .map-control-btn {
-    width: 48px;
-    height: 48px;
-    background: white;
-    border-radius: 24px;
+  
+  .person-vibe {
+    display: inline-block;
+    background: rgba(18, 52, 118, 0.1);
+    color: var(--primary);
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  
+  .person-activity {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+  }
+  
+  .person-actions {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    gap: 0.5rem;
+  }
+  
+  .person-btn {
+    flex: 1;
+    padding: 0.5rem;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    font-weight: 500;
     cursor: pointer;
     transition: all var(--transition-normal);
+    text-align: center;
   }
-
-  .map-control-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  
+  .btn-connect {
+    background: var(--primary);
+    color: white;
   }
-
-  .map-control-btn::after {
-    content: '';
-    width: 20px;
-    height: 20px;
-    background: var(--text-primary);
-    border-radius: 2px;
+  
+  .btn-connect:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
   }
-
-  /* Location Info Panel */
-  .location-info {
+  
+  .btn-view {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--bg-tertiary);
+  }
+  
+  .btn-view:hover {
+    background: var(--bg-tertiary);
+    transform: translateY(-1px);
+  }
+  
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-secondary);
+  }
+  
+  .empty-icon {
+    font-size: 4rem;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+  }
+  
+  .empty-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+  
+  .empty-text {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+  }
+  
+  .floating-elements {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+  }
+  
+  .floating-element {
     position: absolute;
-    bottom: 20px;
-    left: 20px;
-    right: 20px;
-    background: white;
-    border-radius: 16px;
-    padding: 16px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-    transform: translateY(100%);
-    transition: transform var(--transition-normal);
-    z-index: 10;
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: float 6s ease-in-out infinite;
   }
-
-  .location-info.show {
-    transform: translateY(0);
+  
+  .floating-element:nth-child(1) {
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
   }
-
-  .location-title {
-    font-family: 'Outfit', sans-serif;
-    font-weight: 600;
-    font-size: 18px;
-    color: var(--text-primary);
-    margin-bottom: 8px;
+  
+  .floating-element:nth-child(2) {
+    top: 60%;
+    right: 10%;
+    animation-delay: 2s;
   }
-
-  .location-description {
-    font-family: 'Outfit', sans-serif;
-    font-size: 14px;
-    color: var(--text-secondary);
-    margin-bottom: 12px;
+  
+  .floating-element:nth-child(3) {
+    top: 80%;
+    left: 20%;
+    animation-delay: 4s;
   }
-
-  .location-stats {
-    display: flex;
-    gap: 16px;
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
   }
-
-  .stat-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-  }
-
-  .stat-number {
-    font-family: 'Outfit', sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    color: var(--text-primary);
-  }
-
-  .stat-label {
-    font-family: 'Outfit', sans-serif;
-    font-size: 12px;
-    color: var(--text-secondary);
-  }
-
+  
   @media (max-width: 768px) {
-    body {
-      width: 100%;
-      max-width: 442px;
+    .map-content {
+      padding: 1rem;
     }
     
-    .map {
-      width: 100%;
-      height: 100vh;
+    .people-grid {
+      grid-template-columns: 1fr;
     }
     
-    .back-button {
-      left: 12px;
+    .filters {
+      justify-content: center;
     }
     
-    .map-ui {
-      right: 12px;
+    .header-content {
+      flex-wrap: wrap;
+      gap: 1rem;
     }
     
-    .map-ui-bottom {
-      left: 12px;
+    .map-title {
+      font-size: 1.25rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .map-header {
+      padding: 1rem;
     }
     
-    .user-profile {
-      right: 12px;
+    .map-content {
+      padding: 0.75rem;
     }
     
-    .location-info {
-      left: 12px;
-      right: 12px;
+    .map-placeholder {
+      height: 300px;
+    }
+    
+    .map-icon {
+      font-size: 2rem;
+    }
+    
+    .person-card {
+      padding: 1rem;
     }
   }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="map-screen">
-  <!-- Map Background -->
-  <div class="map"></div>
-  
-  <!-- Map Elements -->
-  <div class="map-elements">
-    <div class="location-marker"></div>
-    <div class="location-marker"></div>
-    <div class="location-marker"></div>
-    <div class="location-marker"></div>
-    <div class="location-marker"></div>
-    <div class="location-marker"></div>
+<div class="floating-elements">
+  <div class="floating-element"></div>
+  <div class="floating-element"></div>
+  <div class="floating-element"></div>
+</div>
+
+<div class="map-container">
+  <div class="map-header">
+    <div class="header-content">
+      <div class="back-button" onclick="history.back()">
+        <i class="fas fa-arrow-left"></i>
+      </div>
+      
+      <h1 class="map-title">Map View</h1>
+      
+      <div class="map-actions">
+        <button class="map-btn" onclick="refreshMap()" title="Refresh">
+          <i class="fas fa-sync-alt"></i>
+        </button>
+        <button class="map-btn" onclick="centerMap()" title="Center">
+          <i class="fas fa-crosshairs"></i>
+        </button>
+      </div>
+    </div>
   </div>
   
-  <!-- Map UI Elements -->
-  <div class="map-ui">Map</div>
-  <div class="map-ui-bottom">Location</div>
-  
-  <!-- User Profile -->
-  <div class="user-profile">U</div>
-  
-  <!-- Back Button -->
-  <div class="back-button" onclick="window.history.back()"></div>
-  
-  <!-- Map Controls -->
-  <div class="map-controls">
-    <div class="map-control-btn" onclick="zoomIn()"></div>
-    <div class="map-control-btn" onclick="zoomOut()"></div>
-    <div class="map-control-btn" onclick="centerMap()"></div>
-  </div>
-  
-  <!-- Location Info Panel -->
-  <div class="location-info" id="locationInfo">
-    <div class="location-title">Your Area</div>
-    <div class="location-description">Find people with similar vibes near you</div>
-    <div class="location-stats">
-      <div class="stat-item">
-        <div class="stat-number">12</div>
-        <div class="stat-label">Active Users</div>
+  <div class="map-content">
+    <div class="map-placeholder">
+      <div class="map-placeholder-content">
+        <div class="map-icon">
+          <i class="fas fa-map-marked-alt"></i>
+        </div>
+        <h3 class="map-placeholder-title">Interactive Map</h3>
+        <p class="map-placeholder-text">
+          Discover people and activities near you. The map will show real-time locations of Fiunite users and their current vibes.
+        </p>
       </div>
-      <div class="stat-item">
-        <div class="stat-number">5</div>
-        <div class="stat-label">Vibe Matches</div>
+    </div>
+    
+    <div class="nearby-section">
+      <h2 class="section-title">
+        <div class="section-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        People Nearby
+      </h2>
+      
+      <div class="filters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="geeky">Geeky</button>
+        <button class="filter-btn" data-filter="chill">Chill</button>
+        <button class="filter-btn" data-filter="energetic">Energetic</button>
+        <button class="filter-btn" data-filter="romantic">Romantic</button>
+        <button class="filter-btn" data-filter="adventurous">Adventurous</button>
+        <button class="filter-btn" data-filter="creative">Creative</button>
       </div>
-      <div class="stat-item">
-        <div class="stat-number">3</div>
-        <div class="stat-label">Nearby Events</div>
+      
+      <div class="people-grid" id="peopleGrid">
+        <!-- Sample people data -->
+        <div class="person-card" data-vibe="geeky">
+          <div class="person-header">
+            <div class="person-avatar">A</div>
+            <div class="person-info">
+              <div class="person-name">Alex Chen</div>
+              <div class="person-distance">0.5 km away</div>
+            </div>
+          </div>
+          <div class="person-vibe">Geeky</div>
+          <div class="person-activity">
+            <i class="fas fa-laptop-code"></i> Working on a coding project
+          </div>
+          <div class="person-actions">
+            <button class="person-btn btn-connect" onclick="connectUser('alex')">
+              <i class="fas fa-heart"></i> Connect
+            </button>
+            <button class="person-btn btn-view" onclick="viewProfile('alex')">
+              <i class="fas fa-user"></i> View
+            </button>
+          </div>
+        </div>
+        
+        <div class="person-card" data-vibe="chill">
+          <div class="person-header">
+            <div class="person-avatar">M</div>
+            <div class="person-info">
+              <div class="person-name">Maya Patel</div>
+              <div class="person-distance">1.2 km away</div>
+            </div>
+          </div>
+          <div class="person-vibe">Chill</div>
+          <div class="person-activity">
+            <i class="fas fa-leaf"></i> Reading in the park
+          </div>
+          <div class="person-actions">
+            <button class="person-btn btn-connect" onclick="connectUser('maya')">
+              <i class="fas fa-heart"></i> Connect
+            </button>
+            <button class="person-btn btn-view" onclick="viewProfile('maya')">
+              <i class="fas fa-user"></i> View
+            </button>
+          </div>
+        </div>
+        
+        <div class="person-card" data-vibe="energetic">
+          <div class="person-header">
+            <div class="person-avatar">J</div>
+            <div class="person-info">
+              <div class="person-name">Jordan Kim</div>
+              <div class="person-distance">0.8 km away</div>
+            </div>
+          </div>
+          <div class="person-vibe">Energetic</div>
+          <div class="person-activity">
+            <i class="fas fa-running"></i> Morning workout
+          </div>
+          <div class="person-actions">
+            <button class="person-btn btn-connect" onclick="connectUser('jordan')">
+              <i class="fas fa-heart"></i> Connect
+            </button>
+            <button class="person-btn btn-view" onclick="viewProfile('jordan')">
+              <i class="fas fa-user"></i> View
+            </button>
+          </div>
+        </div>
+        
+        <div class="person-card" data-vibe="romantic">
+          <div class="person-header">
+            <div class="person-avatar">S</div>
+            <div class="person-info">
+              <div class="person-name">Sam Wilson</div>
+              <div class="person-distance">2.1 km away</div>
+            </div>
+          </div>
+          <div class="person-vibe">Romantic</div>
+          <div class="person-activity">
+            <i class="fas fa-heart"></i> Coffee date setup
+          </div>
+          <div class="person-actions">
+            <button class="person-btn btn-connect" onclick="connectUser('sam')">
+              <i class="fas fa-heart"></i> Connect
+            </button>
+            <button class="person-btn btn-view" onclick="viewProfile('sam')">
+              <i class="fas fa-user"></i> View
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Show location info after a delay
-    setTimeout(() => {
-      document.getElementById('locationInfo').classList.add('show');
-    }, 1000);
-    
-    // Add click events to location markers
-    document.querySelectorAll('.location-marker').forEach((marker, index) => {
-      marker.addEventListener('click', function() {
-        // Remove active class from all markers
-        document.querySelectorAll('.location-marker').forEach(m => m.classList.remove('active'));
-        
-        // Add active class to clicked marker
-        this.classList.add('active');
-        
-        // Update location info
-        const locationInfo = document.getElementById('locationInfo');
-        const locations = [
-          { title: 'Downtown Area', description: 'Tech enthusiasts and creative minds', users: 8, matches: 3, events: 2 },
-          { title: 'University District', description: 'Students and young professionals', users: 15, matches: 6, events: 4 },
-          { title: 'Arts Quarter', description: 'Artists and creative professionals', users: 6, matches: 2, events: 1 },
-          { title: 'Business District', description: 'Professionals and entrepreneurs', users: 10, matches: 4, events: 3 },
-          { title: 'Residential Area', description: 'Families and local community', users: 12, matches: 5, events: 2 },
-          { title: 'Park District', description: 'Nature lovers and outdoor enthusiasts', users: 9, matches: 3, events: 2 }
-        ];
-        
-        const location = locations[index];
-        locationInfo.querySelector('.location-title').textContent = location.title;
-        locationInfo.querySelector('.location-description').textContent = location.description;
-        locationInfo.querySelectorAll('.stat-number')[0].textContent = location.users;
-        locationInfo.querySelectorAll('.stat-number')[1].textContent = location.matches;
-        locationInfo.querySelectorAll('.stat-number')[2].textContent = location.events;
-        
-        // Show location info
-        locationInfo.classList.add('show');
-      });
-    });
-    
-    // Add hover effects to markers
-    document.querySelectorAll('.location-marker').forEach(marker => {
-      marker.addEventListener('mouseenter', function() {
-        this.style.transform = 'scale(1.2)';
-      });
+  // Filter functionality
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      // Remove active class from all buttons
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       
-      marker.addEventListener('mouseleave', function() {
-        this.style.transform = 'scale(1)';
+      // Add active class to clicked button
+      this.classList.add('active');
+      
+      // Filter people cards
+      const filter = this.dataset.filter;
+      const cards = document.querySelectorAll('.person-card');
+      
+      cards.forEach(card => {
+        if (filter === 'all' || card.dataset.vibe === filter) {
+          card.style.display = 'block';
+          card.style.animation = 'fadeIn 0.5s ease-in-out';
+        } else {
+          card.style.display = 'none';
+        }
       });
     });
   });
   
-  // Map control functions
-  function zoomIn() {
-    console.log('Zooming in...');
-    // Add zoom in animation
-    document.querySelector('.map').style.transform = 'scale(1.1)';
+  // Connect user function
+  function connectUser(userId) {
+    const btn = event.target.closest('.btn-connect');
+    const originalText = btn.innerHTML;
+    
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connecting...';
+    btn.disabled = true;
+    
     setTimeout(() => {
-      document.querySelector('.map').style.transform = 'scale(1)';
-    }, 300);
+      btn.innerHTML = '<i class="fas fa-check"></i> Connected!';
+      btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+      
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        btn.style.background = '';
+      }, 2000);
+    }, 1500);
   }
   
-  function zoomOut() {
-    console.log('Zooming out...');
-    // Add zoom out animation
-    document.querySelector('.map').style.transform = 'scale(0.9)';
+  // View profile function
+  function viewProfile(userId) {
+    const btn = event.target.closest('.btn-view');
+    const originalText = btn.innerHTML;
+    
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+    btn.disabled = true;
+    
     setTimeout(() => {
-      document.querySelector('.map').style.transform = 'scale(1)';
-    }, 300);
+      btn.innerHTML = '<i class="fas fa-eye"></i> Viewed';
+      btn.style.background = 'var(--primary)';
+      btn.style.color = 'white';
+      
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        btn.style.background = '';
+        btn.style.color = '';
+      }, 2000);
+    }, 1000);
+  }
+  
+  // Map functions
+  function refreshMap() {
+    const refreshBtn = document.querySelector('.map-btn[onclick="refreshMap()"]');
+    refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    
+    setTimeout(() => {
+      refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i>';
+    }, 2000);
   }
   
   function centerMap() {
-    console.log('Centering map...');
-    // Add center animation
-    document.querySelector('.map').style.transform = 'translate(-50%, -50%)';
+    const centerBtn = document.querySelector('.map-btn[onclick="centerMap()"]');
+    centerBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    
     setTimeout(() => {
-      document.querySelector('.map').style.transform = 'translate(0, 0)';
-    }, 300);
+      centerBtn.innerHTML = '<i class="fas fa-crosshairs"></i>';
+    }, 1000);
   }
+  
+  // Add click animations
+  document.querySelectorAll('.person-btn, .filter-btn, .map-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      this.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        this.style.transform = '';
+      }, 150);
+    });
+  });
+  
+  // Add intersection observer for animations
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, observerOptions);
+  
+  // Observe all person cards
+  document.querySelectorAll('.person-card').forEach((card, index) => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(30px)';
+    card.style.transition = `all 0.6s ease ${index * 0.1}s`;
+    observer.observe(card);
+  });
 </script>
+
+<style>
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
 {% endblock %}

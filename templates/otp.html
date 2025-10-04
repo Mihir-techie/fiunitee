@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}OTP Verification - Fiunite{% endblock %}
-{% block description %}Verify your email address to complete your Fiunite account setup.{% endblock %}
+{% block title %}Verify Your Email - Fiunite{% endblock %}
+{% block description %}Enter your email to receive a verification code for your Fiunite account.{% endblock %}
 
 {% block extra_css %}
 <style>
   body {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--bg-gradient);
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -16,7 +16,7 @@
   
   .otp-container {
     width: 100%;
-    max-width: 450px;
+    max-width: 400px;
     position: relative;
   }
   
@@ -28,6 +28,7 @@
     box-shadow: var(--shadow-2xl);
     border: 1px solid rgba(255, 255, 255, 0.2);
     animation: slideInUp 0.8s ease-out;
+    text-align: center;
   }
   
   @keyframes slideInUp {
@@ -42,7 +43,6 @@
   }
   
   .otp-header {
-    text-align: center;
     margin-bottom: 2rem;
   }
   
@@ -57,20 +57,11 @@
     margin: 0 auto 1.5rem;
     font-size: 2rem;
     color: white;
-    animation: pulse 2s infinite;
-  }
-  
-  @keyframes pulse {
-    0%, 100% {
-      transform: scale(1);
-    }
-    50% {
-      transform: scale(1.05);
-    }
+    box-shadow: var(--shadow-lg);
   }
   
   .otp-title {
-    font-size: 2rem;
+    font-size: 1.75rem;
     font-weight: 700;
     color: var(--text-primary);
     margin-bottom: 0.5rem;
@@ -79,7 +70,7 @@
   .otp-subtitle {
     color: var(--text-secondary);
     font-size: 1rem;
-    line-height: 1.6;
+    line-height: 1.5;
   }
   
   .form-group {
@@ -100,7 +91,7 @@
   .form-input:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    box-shadow: 0 0 0 3px rgba(18, 52, 118, 0.1);
     background: white;
   }
   
@@ -141,6 +132,23 @@
   .otp-btn:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-xl);
+  }
+  
+  .otp-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: var(--text-secondary);
+  }
+  
+  .otp-footer a {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+  
+  .otp-footer a:hover {
+    color: var(--primary-dark);
   }
   
   .floating-elements {
@@ -189,21 +197,14 @@
     }
   }
   
-  .help-text {
-    text-align: center;
-    margin-top: 1.5rem;
-    color: var(--text-secondary);
+  .error-message {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 1rem;
     font-size: 0.875rem;
-  }
-  
-  .help-text a {
-    color: var(--primary);
-    font-weight: 600;
-    text-decoration: none;
-  }
-  
-  .help-text a:hover {
-    color: var(--primary-dark);
   }
   
   @media (max-width: 480px) {
@@ -213,7 +214,7 @@
     }
     
     .otp-title {
-      font-size: 1.75rem;
+      font-size: 1.5rem;
     }
   }
 </style>
@@ -234,7 +235,7 @@
       </div>
       <h1 class="otp-title">Verify Your Email</h1>
       <p class="otp-subtitle">
-        We'll send you a verification code to confirm your email address and activate your Fiunite account.
+        Enter your email address to receive a verification code
       </p>
     </div>
     
@@ -245,7 +246,6 @@
           name="email" 
           placeholder="Enter your email address" 
           class="form-input"
-          value="{{ prefill if prefill else '' }}"
           required
         >
       </div>
@@ -255,44 +255,54 @@
       </button>
     </form>
     
-    <div class="help-text">
-      <p>Already verified? <a href="/login">Sign in here</a></p>
-      <p style="margin-top: 0.5rem;">
-        <a href="/welcome">← Back to Home</a>
+    <div class="otp-footer">
+      <p style="margin-top: 1rem; font-size: 0.875rem;">
+        <a href="/signup">← Back to Sign Up</a>
       </p>
     </div>
   </div>
 </div>
 
 <script>
-  // Form validation
+  // Add form validation feedback
   document.querySelector('form').addEventListener('submit', function(e) {
     const email = this.querySelector('input[name="email"]');
     
+    // Remove existing error messages
+    const existingError = this.querySelector('.error-message');
+    if (existingError) {
+      existingError.remove();
+    }
+    
+    // Basic validation
     if (!email.value) {
       e.preventDefault();
-      alert('Please enter your email address');
-      return;
-    }
-    
-    if (!isValidEmail(email.value)) {
+      showError('Please enter your email address');
+    } else if (!isValidEmail(email.value)) {
       e.preventDefault();
-      alert('Please enter a valid email address');
-      return;
+      showError('Please enter a valid email address');
+    } else {
+      // Show loading state
+      const btn = this.querySelector('.otp-btn');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+      btn.disabled = true;
+      
+      // Re-enable after 5 seconds as fallback
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }, 5000);
     }
-    
-    // Show loading state
-    const btn = this.querySelector('.otp-btn');
-    const originalText = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-    btn.disabled = true;
-    
-    // Re-enable after 5 seconds as fallback
-    setTimeout(() => {
-      btn.innerHTML = originalText;
-      btn.disabled = false;
-    }, 5000);
   });
+  
+  function showError(message) {
+    const form = document.querySelector('form');
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message';
+    errorDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+    form.insertBefore(errorDiv, form.firstChild);
+  }
   
   function isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -300,12 +310,14 @@
   }
   
   // Add focus animations
-  document.querySelector('.form-input').addEventListener('focus', function() {
-    this.parentElement.style.transform = 'scale(1.02)';
-  });
-  
-  document.querySelector('.form-input').addEventListener('blur', function() {
-    this.parentElement.style.transform = 'scale(1)';
+  document.querySelectorAll('.form-input').forEach(input => {
+    input.addEventListener('focus', function() {
+      this.parentElement.style.transform = 'scale(1.02)';
+    });
+    
+    input.addEventListener('blur', function() {
+      this.parentElement.style.transform = 'scale(1)';
+    });
   });
 </script>
 {% endblock %}

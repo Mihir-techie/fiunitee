@@ -5,615 +5,456 @@
 {% block extra_css %}
 <style>
   body {
-    background: #FFFFFF;
-    position: relative;
-    width: 440px;
-    height: 2124px;
-    margin: 0 auto;
-    padding-top: 80px;
-  }
-
-  .matches-screen {
-    position: relative;
-    width: 100%;
+    background: var(--bg-gradient);
     min-height: 100vh;
-    background: #FFFFFF;
-    padding: 0 24px;
+    padding: 2rem 1rem;
   }
-
-  /* Back Button */
-  .back-button {
-    position: absolute;
-    width: 24px;
-    height: 24px;
-    left: 24px;
-    top: 58px;
-    cursor: pointer;
-    z-index: 10;
+  
+  .vibe-container {
+    max-width: 1200px;
+    margin: 0 auto;
   }
-
-  .back-button::after {
-    content: '';
-    position: absolute;
-    left: 19.53%;
-    right: 19.53%;
-    top: 21.88%;
-    bottom: 21.88%;
-    border: 2px solid var(--text-primary);
-    border-radius: 2px;
-  }
-
-  /* Header */
-  .header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 0;
-    gap: 16px;
-    width: 361px;
-    height: 86px;
-    margin: 0 auto 2rem;
-  }
-
-  .header-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 0;
-    gap: 6px;
-    width: 361px;
-    height: 86px;
-  }
-
-  .title {
-    width: 257px;
-    height: 40px;
-    font-family: 'Outfit', sans-serif;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 32px;
-    line-height: 40px;
+  
+  .vibe-header {
     text-align: center;
-    color: var(--text-primary);
+    margin-bottom: 3rem;
+    color: white;
   }
-
-  .subtitle {
-    width: 361px;
-    height: 40px;
-    font-family: 'Outfit', sans-serif;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 20px;
-    text-align: center;
-    color: var(--text-secondary);
+  
+  .vibe-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    background: linear-gradient(45deg, #fff, #f0f0f0, #fff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 4px 8px rgba(0,0,0,0.3);
   }
-
-  /* Progress Indicator */
-  .progress-indicator {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 0;
-    gap: 15px;
-    width: 208px;
-    height: 6px;
-    margin: 0 auto 2rem;
+  
+  .vibe-subtitle {
+    font-size: 1.25rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
   }
-
-  .progress-step {
-    width: 29.6px;
-    height: 6px;
-    background: var(--bg-grey);
-    border-radius: 12px;
-    flex: none;
-    flex-grow: 1;
+  
+  .vibe-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
   }
-
-  .progress-step.active {
-    background: var(--primary-gradient);
-  }
-
-  /* Container */
-  .container {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    padding: 0;
-    gap: 32px;
-    width: 400px;
-    height: auto;
-  }
-
-  .category-section {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 0;
-    gap: 20px;
-    width: 400px;
-    height: auto;
-  }
-
-  .category-title {
-    width: 400px;
-    height: 40px;
-    font-family: 'Outfit', sans-serif;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 32px;
-    line-height: 40px;
-    color: var(--text-primary);
-  }
-
-  .category-container {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 0;
-    gap: 32px;
-    width: 400px;
-    height: auto;
-  }
-
-  /* Avatar Cards */
-  .avatar-card {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 14px 12px;
-    gap: 10px;
-    width: 400px;
-    height: 239px;
-    background: #FFFFFF;
-    box-shadow: var(--shadow-lg);
-    border-radius: var(--radius-md);
-  }
-
-  .avatar-card-content {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 0;
-    gap: 12px;
-    width: 368px;
-    height: 211px;
-  }
-
-  .avatar-title {
-    width: 368px;
-    height: 25px;
-    font-family: 'Outfit', sans-serif;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 25px;
-    color: var(--text-primary);
-  }
-
-  .avatar-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 0;
-    gap: 20px;
-    width: 368px;
-    height: 174px;
-  }
-
-  .avatar {
-    width: 174px;
-    height: 174px;
-    border-radius: 1000px;
-    background-size: cover;
-    background-position: center;
-    flex: none;
-    flex-grow: 0;
+  
+  .vibe-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-2xl);
+    padding: 2rem;
+    box-shadow: var(--shadow-2xl);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all var(--transition-normal);
     position: relative;
     overflow: hidden;
   }
-
-  .avatar::before {
+  
+  .vibe-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+  }
+  
+  .vibe-card::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    opacity: 0.8;
-    border-radius: 1000px;
+    height: 4px;
+    background: var(--bg-gradient);
   }
-
-  .avatar-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-family: 'Outfit', sans-serif;
-    font-weight: 600;
-    font-size: 48px;
-    z-index: 1;
-  }
-
-  /* Button Container */
-  .button-container {
+  
+  .vibe-header-card {
     display: flex;
-    flex-direction: row;
-    justify-content: center;
     align-items: center;
-    padding: 18px 154px;
-    gap: 10px;
-    position: fixed;
-    width: 392px;
-    height: 54px;
-    left: 24px;
-    bottom: 44px;
-    background: #FFFFFF;
-    box-shadow: var(--shadow-lg);
-    border-radius: 34px;
-    z-index: 100;
+    margin-bottom: 1.5rem;
   }
-
-  .button-text {
-    width: 64px;
-    height: 20px;
-    font-family: 'Outfit', sans-serif;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 20px;
-    text-align: center;
+  
+  .vibe-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--bg-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-right: 1rem;
+    box-shadow: var(--shadow-md);
+  }
+  
+  .vibe-user-info {
+    flex: 1;
+  }
+  
+  .vibe-username {
+    font-size: 1.25rem;
+    font-weight: 600;
     color: var(--text-primary);
+    margin-bottom: 0.25rem;
   }
-
-  /* Bottom Progress Bar */
-  .bottom-progress-bar {
+  
+  .vibe-badge {
+    display: inline-block;
+    background: var(--bg-gradient);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-full);
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  .vibe-details {
+    margin-bottom: 1.5rem;
+  }
+  
+  .vibe-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    color: var(--text-secondary);
+  }
+  
+  .vibe-item i {
+    width: 20px;
+    margin-right: 0.75rem;
+    color: var(--primary);
+  }
+  
+  .vibe-item strong {
+    color: var(--text-primary);
+    margin-left: 0.25rem;
+  }
+  
+  .vibe-actions {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .vibe-btn {
+    flex: 1;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    text-decoration: none;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  .vibe-btn-primary {
+    background: var(--bg-gradient);
+    color: white;
+    box-shadow: var(--shadow-md);
+  }
+  
+  .vibe-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+  
+  .vibe-btn-secondary {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 2px solid var(--bg-tertiary);
+  }
+  
+  .vibe-btn-secondary:hover {
+    background: var(--bg-tertiary);
+    transform: translateY(-2px);
+  }
+  
+  .no-matches {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-2xl);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .no-matches-icon {
+    font-size: 4rem;
+    background: var(--bg-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+  }
+  
+  .no-matches-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+  }
+  
+  .no-matches-description {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+  
+  .floating-elements {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+  }
+  
+  .floating-element {
     position: absolute;
-    width: 134px;
-    height: 5px;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: 10px;
-    background: var(--text-primary);
-    border-radius: 34px;
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: float 6s ease-in-out infinite;
   }
-
-  /* Personality-based avatar colors */
-  .avatar.geeky::before { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
-  .avatar.chill::before { background: linear-gradient(135deg, #10b981, #06b6d4); }
-  .avatar.energetic::before { background: linear-gradient(135deg, #f59e0b, #ef4444); }
-  .avatar.romantic::before { background: linear-gradient(135deg, #ec4899, #f97316); }
-  .avatar.adventurous::before { background: linear-gradient(135deg, #8b5cf6, #06b6d4); }
-  .avatar.creative::before { background: linear-gradient(135deg, #f59e0b, #ec4899); }
-
+  
+  .floating-element:nth-child(1) {
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+  }
+  
+  .floating-element:nth-child(2) {
+    top: 60%;
+    right: 10%;
+    animation-delay: 2s;
+  }
+  
+  .floating-element:nth-child(3) {
+    top: 80%;
+    left: 20%;
+    animation-delay: 4s;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+  
+  /* Mobile Responsive */
   @media (max-width: 768px) {
-    body {
-      width: 100%;
-      max-width: 440px;
-      padding-top: 60px;
+    .vibe-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
     }
     
-    .matches-screen {
-      padding: 0 16px;
+    .vibe-card {
+      padding: 1.5rem;
     }
     
-    .header {
-      width: 100%;
-      max-width: 361px;
+    .vibe-title {
+      font-size: 2.5rem;
     }
     
-    .header-content {
-      width: 100%;
-      max-width: 361px;
+    .vibe-subtitle {
+      font-size: 1.125rem;
     }
     
-    .title {
-      width: 100%;
-      max-width: 257px;
-      font-size: 28px;
-    }
-    
-    .subtitle {
-      width: 100%;
-      max-width: 361px;
-    }
-    
-    .container {
-      width: 100%;
-      max-width: 400px;
-    }
-    
-    .category-section {
-      width: 100%;
-      max-width: 400px;
-    }
-    
-    .category-title {
-      width: 100%;
-      max-width: 400px;
-      font-size: 28px;
-    }
-    
-    .category-container {
-      width: 100%;
-      max-width: 400px;
-    }
-    
-    .avatar-card {
-      width: 100%;
-      max-width: 400px;
-    }
-    
-    .avatar-card-content {
-      width: 100%;
-      max-width: 368px;
-    }
-    
-    .avatar-title {
-      width: 100%;
-      max-width: 368px;
-    }
-    
-    .avatar-container {
-      width: 100%;
-      max-width: 368px;
+    .vibe-actions {
       flex-direction: column;
-      height: auto;
-      gap: 12px;
     }
     
-    .avatar {
-      width: 120px;
-      height: 120px;
-    }
-    
-    .avatar-text {
-      font-size: 32px;
-    }
-    
-    .button-container {
+    .vibe-btn {
       width: 100%;
-      max-width: 392px;
-      left: 50%;
-      transform: translateX(-50%);
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .vibe-title {
+      font-size: 2rem;
+    }
+    
+    .vibe-header {
+      margin-bottom: 2rem;
+    }
+    
+    .vibe-card {
+      padding: 1.25rem;
+    }
+    
+    .vibe-avatar {
+      width: 50px;
+      height: 50px;
+      font-size: 1.25rem;
+    }
+    
+    .vibe-username {
+      font-size: 1.125rem;
     }
   }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="matches-screen">
-  <!-- Back Button -->
-  <div class="back-button" onclick="window.history.back()"></div>
-  
-  <!-- Header -->
-  <div class="header">
-    <div class="header-content">
-      <h1 class="title">Your Matches</h1>
-      <p class="subtitle">People who share your vibe</p>
-    </div>
+<div class="floating-elements">
+  <div class="floating-element"></div>
+  <div class="floating-element"></div>
+  <div class="floating-element"></div>
+</div>
+
+<div class="vibe-container">
+  <div class="vibe-header">
+    <h1 class="vibe-title">
+      <i class="fas fa-heart"></i> Your Vibe Matches
+    </h1>
+    <p class="vibe-subtitle">
+      Discover amazing people who share your energy and interests
+    </p>
   </div>
   
-  <!-- Progress Indicator -->
-  <div class="progress-indicator">
-    <div class="progress-step"></div>
-    <div class="progress-step"></div>
-    <div class="progress-step"></div>
-    <div class="progress-step"></div>
-    <div class="progress-step active"></div>
-  </div>
-  
-  <!-- Container -->
-  <div class="container">
-    {% if vibes %}
-      <!-- Geeky Matches -->
-      <div class="category-section">
-        <h2 class="category-title">Geeky Vibes</h2>
-        <div class="category-container">
-          {% for vibe in vibes %}
-            {% if vibe[1] == 'Geeky' %}
-              <div class="avatar-card">
-                <div class="avatar-card-content">
-                  <h3 class="avatar-title">{{ vibe[1] }} Vibes</h3>
-                  <div class="avatar-container">
-                    <div class="avatar geeky">
-                      <div class="avatar-text">{{ vibe[0][0].upper() }}</div>
-                    </div>
-                    <div class="avatar geeky">
-                      <div class="avatar-text">{{ vibe[0][0].upper() }}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            {% endif %}
-          {% endfor %}
-        </div>
-      </div>
-      
-      <!-- Chill Matches -->
-      <div class="category-section">
-        <h2 class="category-title">Chill Vibes</h2>
-        <div class="category-container">
-          {% for vibe in vibes %}
-            {% if vibe[1] == 'Chill' %}
-              <div class="avatar-card">
-                <div class="avatar-card-content">
-                  <h3 class="avatar-title">{{ vibe[1] }} Vibes</h3>
-                  <div class="avatar-container">
-                    <div class="avatar chill">
-                      <div class="avatar-text">{{ vibe[0][0].upper() }}</div>
-                    </div>
-                    <div class="avatar chill">
-                      <div class="avatar-text">{{ vibe[0][0].upper() }}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            {% endif %}
-          {% endfor %}
-        </div>
-      </div>
-      
-      <!-- Energetic Matches -->
-      <div class="category-section">
-        <h2 class="category-title">Energetic Vibes</h2>
-        <div class="category-container">
-          {% for vibe in vibes %}
-            {% if vibe[1] == 'Energetic' %}
-              <div class="avatar-card">
-                <div class="avatar-card-content">
-                  <h3 class="avatar-title">{{ vibe[1] }} Vibes</h3>
-                  <div class="avatar-container">
-                    <div class="avatar energetic">
-                      <div class="avatar-text">{{ vibe[0][0].upper() }}</div>
-                    </div>
-                    <div class="avatar energetic">
-                      <div class="avatar-text">{{ vibe[0][0].upper() }}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            {% endif %}
-          {% endfor %}
-        </div>
-      </div>
-      
-      <!-- Romantic Matches -->
-      <div class="category-section">
-        <h2 class="category-title">Romantic Vibes</h2>
-        <div class="category-container">
-          {% for vibe in vibes %}
-            {% if vibe[1] == 'Romantic' %}
-              <div class="avatar-card">
-                <div class="avatar-card-content">
-                  <h3 class="avatar-title">{{ vibe[1] }} Vibes</h3>
-                  <div class="avatar-container">
-                    <div class="avatar romantic">
-                      <div class="avatar-text">{{ vibe[0][0].upper() }}</div>
-                    </div>
-                    <div class="avatar romantic">
-                      <div class="avatar-text">{{ vibe[0][0].upper() }}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            {% endif %}
-          {% endfor %}
-        </div>
-      </div>
-      
-      <!-- Adventurous Matches -->
-      <div class="category-section">
-        <h2 class="category-title">Adventurous Vibes</h2>
-        <div class="category-container">
-          {% for vibe in vibes %}
-            {% if vibe[1] == 'Adventurous' %}
-              <div class="avatar-card">
-                <div class="avatar-card-content">
-                  <h3 class="avatar-title">{{ vibe[1] }} Vibes</h3>
-                  <div class="avatar-container">
-                    <div class="avatar adventurous">
-                      <div class="avatar-text">{{ vibe[0][0].upper() }}</div>
-                    </div>
-                    <div class="avatar adventurous">
-                      <div class="avatar-text">{{ vibe[0][0].upper() }}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            {% endif %}
-          {% endfor %}
-        </div>
-      </div>
-      
-      <!-- Creative Matches -->
-      <div class="category-section">
-        <h2 class="category-title">Creative Vibes</h2>
-        <div class="category-container">
-          {% for vibe in vibes %}
-            {% if vibe[1] == 'Creative' %}
-              <div class="avatar-card">
-                <div class="avatar-card-content">
-                  <h3 class="avatar-title">{{ vibe[1] }} Vibes</h3>
-                  <div class="avatar-container">
-                    <div class="avatar creative">
-                      <div class="avatar-text">{{ vibe[0][0].upper() }}</div>
-                    </div>
-                    <div class="avatar creative">
-                      <div class="avatar-text">{{ vibe[0][0].upper() }}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            {% endif %}
-          {% endfor %}
-        </div>
-      </div>
-    {% else %}
-      <!-- No matches found -->
-      <div class="category-section">
-        <div class="avatar-card">
-          <div class="avatar-card-content">
-            <h3 class="avatar-title">No Matches Yet</h3>
-            <div class="avatar-container">
-              <div class="avatar" style="background: var(--bg-grey);">
-                <div class="avatar-text">?</div>
-              </div>
-              <div class="avatar" style="background: var(--bg-grey);">
-                <div class="avatar-text">?</div>
-              </div>
+  {% if vibes %}
+    <div class="vibe-grid">
+      {% for v in vibes %}
+        <div class="vibe-card">
+          <div class="vibe-header-card">
+            <div class="vibe-avatar">{{ v[0][0].upper() }}</div>
+            <div class="vibe-user-info">
+              <div class="vibe-username">{{ v[0] }}</div>
+              <span class="vibe-badge">{{ v[1] }} Vibe</span>
             </div>
           </div>
+          
+          <div class="vibe-details">
+            <div class="vibe-item">
+              <i class="fas fa-gamepad"></i>
+              <span>Activity: <strong>{{ v[2] }}</strong></span>
+            </div>
+            <div class="vibe-item">
+              <i class="fas fa-calendar"></i>
+              <span>Date: <strong>{{ v[3] }}</strong></span>
+            </div>
+            <div class="vibe-item">
+              <i class="fas fa-clock"></i>
+              <span>Time: <strong>{{ v[4] }} - {{ v[5] }}</strong></span>
+            </div>
+          </div>
+          
+          <div class="vibe-actions">
+            <button class="vibe-btn vibe-btn-primary" onclick="connectWithUser('{{ v[0] }}')">
+              <i class="fas fa-heart"></i> Connect
+            </button>
+            <button class="vibe-btn vibe-btn-secondary" onclick="viewProfile('{{ v[0] }}')">
+              <i class="fas fa-user"></i> Profile
+            </button>
+          </div>
         </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="no-matches">
+      <div class="no-matches-icon">
+        <i class="fas fa-search"></i>
       </div>
-    {% endif %}
-  </div>
-  
-  <!-- Button Container -->
-  <div class="button-container" onclick="window.location.href='/vibe_form'">
-    <span class="button-text">Continue</span>
-  </div>
-  
-  <!-- Bottom Progress Bar -->
-  <div class="bottom-progress-bar"></div>
+      <h2 class="no-matches-title">No Matches Yet</h2>
+      <p class="no-matches-description">
+        Don't worry! Set your vibe and start connecting with amazing people who share your interests and activities.
+      </p>
+      <a href="/vibe_form" class="vibe-btn vibe-btn-primary">
+        <i class="fas fa-plus"></i> Set My Vibe
+      </a>
+    </div>
+  {% endif %}
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Add click animations to avatar cards
-    document.querySelectorAll('.avatar-card').forEach(card => {
-      card.addEventListener('click', function() {
-        this.style.transform = 'scale(0.98)';
-        setTimeout(() => {
-          this.style.transform = '';
-        }, 150);
-      });
-    });
+  function connectWithUser(username) {
+    // Simulate connection action
+    const button = event.target.closest('.vibe-btn-primary');
+    const originalText = button.innerHTML;
     
-    // Add hover effects to avatars
-    document.querySelectorAll('.avatar').forEach(avatar => {
-      avatar.addEventListener('mouseenter', function() {
-        this.style.transform = 'scale(1.05)';
-      });
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connecting...';
+    button.disabled = true;
+    
+    setTimeout(() => {
+      button.innerHTML = '<i class="fas fa-check"></i> Connected!';
+      button.style.background = 'linear-gradient(135deg, #10b981, #059669)';
       
-      avatar.addEventListener('mouseleave', function() {
-        this.style.transform = 'scale(1)';
-      });
-    });
-    
-    // Animate progress steps
-    const progressSteps = document.querySelectorAll('.progress-step');
-    progressSteps.forEach((step, index) => {
       setTimeout(() => {
-        step.style.opacity = '0';
-        step.style.transform = 'scale(0.8)';
-        setTimeout(() => {
-          step.style.opacity = '1';
-          step.style.transform = 'scale(1)';
-        }, 100);
-      }, index * 200);
+        button.innerHTML = originalText;
+        button.disabled = false;
+        button.style.background = '';
+      }, 2000);
+    }, 1500);
+  }
+  
+  function viewProfile(username) {
+    // Simulate profile view action
+    const button = event.target.closest('.vibe-btn-secondary');
+    const originalText = button.innerHTML;
+    
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+    button.disabled = true;
+    
+    setTimeout(() => {
+      button.innerHTML = '<i class="fas fa-eye"></i> Viewed';
+      button.style.background = 'var(--primary)';
+      button.style.color = 'white';
+      
+      setTimeout(() => {
+        button.innerHTML = originalText;
+        button.disabled = false;
+        button.style.background = '';
+        button.style.color = '';
+      }, 2000);
+    }, 1000);
+  }
+  
+  // Add intersection observer for animations
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, observerOptions);
+  
+  // Observe all vibe cards
+  document.querySelectorAll('.vibe-card').forEach((card, index) => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(30px)';
+    card.style.transition = `all 0.6s ease ${index * 0.1}s`;
+    observer.observe(card);
+  });
+  
+  // Add click animations to buttons
+  document.querySelectorAll('.vibe-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      this.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        this.style.transform = '';
+      }, 150);
     });
   });
 </script>

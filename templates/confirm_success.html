@@ -1,16 +1,360 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Selfie Uploaded - Fiunite</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-  <div class="center">
-    <div class="card">
-      <div class="logo">Uploaded ✅</div>
-      <p>Your selfie was uploaded. Our verification team will review it.</p>
-      <a href="{{ url_for('vibe_form') }}" class="btn-gradient">Continue</a>
+{% extends "base.html" %}
+
+{% block title %}Identity Confirmed - Fiunite{% endblock %}
+{% block description %}Your identity has been successfully verified! Welcome to the Fiunite community.{% endblock %}
+
+{% block extra_css %}
+<style>
+  body {
+    background: var(--bg-gradient);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+  
+  .success-container {
+    width: 100%;
+    max-width: 500px;
+    position: relative;
+  }
+  
+  .success-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-2xl);
+    padding: 3rem 2.5rem;
+    box-shadow: var(--shadow-2xl);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center;
+    animation: slideInUp 0.8s ease-out;
+  }
+  
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .success-icon {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #10b981, #059669);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 2rem;
+    font-size: 3.5rem;
+    color: white;
+    animation: successPulse 2s infinite;
+    position: relative;
+  }
+  
+  .success-icon::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #10b981, #059669);
+    opacity: 0.3;
+    animation: ripple 2s infinite;
+  }
+  
+  @keyframes successPulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+  
+  @keyframes ripple {
+    0% {
+      transform: scale(1);
+      opacity: 0.3;
+    }
+    100% {
+      transform: scale(1.3);
+      opacity: 0;
+    }
+  }
+  
+  .success-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: var(--bg-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+  }
+  
+  .success-message {
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+  
+  .celebration-stats {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  
+  .stat-item {
+    text-align: center;
+  }
+  
+  .stat-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+  
+  .stat-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+  }
+  
+  .success-btn {
+    width: 100%;
+    padding: 1.25rem;
+    background: var(--bg-gradient);
+    color: white;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-size: 1.25rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    text-decoration: none;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .success-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+  }
+  
+  .success-btn:hover::before {
+    left: 100%;
+  }
+  
+  .success-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-xl);
+  }
+  
+  .floating-elements {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+  }
+  
+  .floating-element {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: float 8s ease-in-out infinite;
+  }
+  
+  .floating-element:nth-child(1) {
+    top: 15%;
+    left: 10%;
+    animation-delay: 0s;
+  }
+  
+  .floating-element:nth-child(2) {
+    top: 40%;
+    right: 15%;
+    animation-delay: 2s;
+  }
+  
+  .floating-element:nth-child(3) {
+    top: 70%;
+    left: 20%;
+    animation-delay: 4s;
+  }
+  
+  .floating-element:nth-child(4) {
+    top: 25%;
+    right: 30%;
+    animation-delay: 6s;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-30px) rotate(180deg);
+    }
+  }
+  
+  .auto-redirect {
+    margin-top: 1.5rem;
+    color: var(--text-light);
+    font-size: 0.875rem;
+  }
+  
+  .redirect-countdown {
+    color: var(--primary);
+    font-weight: 600;
+  }
+  
+  @media (max-width: 768px) {
+    .success-title {
+      font-size: 2rem;
+    }
+    
+    .stats-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .success-card {
+      padding: 2rem 1.5rem;
+      margin: 1rem;
+    }
+    
+    .success-title {
+      font-size: 1.75rem;
+    }
+    
+    .success-icon {
+      width: 100px;
+      height: 100px;
+      font-size: 3rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="floating-elements">
+  <div class="floating-element"></div>
+  <div class="floating-element"></div>
+  <div class="floating-element"></div>
+  <div class="floating-element"></div>
+</div>
+
+<div class="success-container">
+  <div class="success-card">
+    <div class="success-icon">
+      <i class="fas fa-user-check"></i>
+    </div>
+    
+    <h1 class="success-title">Identity Confirmed!</h1>
+    
+    <p class="success-message">
+      Fantastic! Your identity has been successfully verified. You're now part of the trusted Fiunite community and ready to connect with amazing people who share your vibes.
+    </p>
+    
+    <div class="celebration-stats">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span class="stat-number">✓</span>
+          <span class="stat-label">Identity Verified</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">Ready</span>
+          <span class="stat-label">To Connect</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">100%</span>
+          <span class="stat-label">Trusted</span>
+        </div>
+      </div>
+    </div>
+    
+    <a href="{{ url_for('about_page') }}" class="success-btn">
+      <i class="fas fa-arrow-right"></i> Complete Your Profile
+    </a>
+    
+    <div class="auto-redirect">
+      <p>Automatically redirecting in <span class="redirect-countdown" id="countdown">5</span> seconds...</p>
     </div>
   </div>
-</body>
-</html>
+</div>
+
+<script>
+  // Auto redirect countdown
+  let countdown = 5;
+  const countdownElement = document.getElementById('countdown');
+  
+  const timer = setInterval(() => {
+    countdown--;
+    countdownElement.textContent = countdown;
+    
+    if (countdown <= 0) {
+      clearInterval(timer);
+      window.location.href = "{{ url_for('about_page') }}";
+    }
+  }, 1000);
+  
+  // Add celebration animation
+  setTimeout(() => {
+    document.querySelector('.success-message').style.opacity = '1';
+    document.querySelector('.success-message').style.transform = 'translateY(0)';
+  }, 500);
+  
+  // Add hover effects
+  document.querySelector('.success-btn').addEventListener('mouseenter', function() {
+    this.style.transform = 'translateY(-3px) scale(1.02)';
+  });
+  
+  document.querySelector('.success-btn').addEventListener('mouseleave', function() {
+    this.style.transform = 'translateY(-3px) scale(1)';
+  });
+  
+  // Add hover effects to stats
+  document.querySelectorAll('.stat-item').forEach(stat => {
+    stat.addEventListener('mouseenter', function() {
+      this.style.transform = 'scale(1.05)';
+      this.style.transition = 'transform 0.3s ease';
+    });
+    
+    stat.addEventListener('mouseleave', function() {
+      this.style.transform = 'scale(1)';
+    });
+  });
+</script>
+{% endblock %}

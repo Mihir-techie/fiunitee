@@ -1,16 +1,311 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Verification Sent - Fiunite</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-  <div class="center">
-    <div class="card">
-      <div class="logo">Check your email</div>
-      <p>Verification link sent to {{ email }}. Open your inbox and click the link.</p>
-      <a href="{{ url_for('vibe_form') }}" class="btn-outline">Return</a>
+{% extends "base.html" %}
+
+{% block title %}Verification Email Sent - Fiunite{% endblock %}
+{% block description %}Check your email for the verification link to complete your Fiunite account setup.{% endblock %}
+
+{% block extra_css %}
+<style>
+  body {
+    background: var(--bg-gradient);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+  
+  .verify-container {
+    width: 100%;
+    max-width: 500px;
+    position: relative;
+  }
+  
+  .verify-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-2xl);
+    padding: 3rem 2.5rem;
+    box-shadow: var(--shadow-2xl);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center;
+    animation: slideInUp 0.8s ease-out;
+  }
+  
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .verify-icon {
+    width: 120px;
+    height: 120px;
+    background: var(--bg-gradient);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 2rem;
+    font-size: 3.5rem;
+    color: white;
+    box-shadow: var(--shadow-lg);
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+  
+  .verify-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+  }
+  
+  .verify-message {
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+  
+  .verify-email {
+    background: rgba(18, 52, 118, 0.1);
+    border: 2px solid rgba(18, 52, 118, 0.2);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    margin: 1.5rem 0;
+    color: var(--primary);
+    font-weight: 600;
+    word-break: break-all;
+  }
+  
+  .verify-btn {
+    width: 100%;
+    padding: 1.25rem;
+    background: var(--bg-gradient);
+    color: white;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-size: 1.125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    text-decoration: none;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .verify-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+  }
+  
+  .verify-btn:hover::before {
+    left: 100%;
+  }
+  
+  .verify-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-xl);
+  }
+  
+  .verify-footer {
+    margin-top: 2rem;
+    color: var(--text-light);
+    font-size: 0.875rem;
+  }
+  
+  .verify-footer a {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+  
+  .verify-footer a:hover {
+    color: var(--primary-dark);
+  }
+  
+  .floating-elements {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+  }
+  
+  .floating-element {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .floating-element:nth-child(1) {
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+  }
+  
+  .floating-element:nth-child(2) {
+    top: 60%;
+    right: 10%;
+    animation-delay: 2s;
+  }
+  
+  .floating-element:nth-child(3) {
+    top: 80%;
+    left: 20%;
+    animation-delay: 4s;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+  
+  .instructions {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    border-left: 4px solid var(--primary);
+  }
+  
+  .instructions h4 {
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+  }
+  
+  .instructions ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .instructions li {
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+  
+  .instructions li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--primary);
+    font-weight: bold;
+  }
+  
+  @media (max-width: 480px) {
+    .verify-card {
+      padding: 2rem 1.5rem;
+      margin: 1rem;
+    }
+    
+    .verify-title {
+      font-size: 1.75rem;
+    }
+    
+    .verify-icon {
+      width: 100px;
+      height: 100px;
+      font-size: 3rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="floating-elements">
+  <div class="floating-element"></div>
+  <div class="floating-element"></div>
+  <div class="floating-element"></div>
+</div>
+
+<div class="verify-container">
+  <div class="verify-card">
+    <div class="verify-icon">
+      <i class="fas fa-envelope-open"></i>
+    </div>
+    
+    <h1 class="verify-title">Check Your Email!</h1>
+    
+    <p class="verify-message">
+      We've sent a verification link to your email address. Please check your inbox and click the link to verify your account.
+    </p>
+    
+    <div class="verify-email">
+      <i class="fas fa-envelope"></i> {{ email }}
+    </div>
+    
+    <div class="instructions">
+      <h4>Next Steps:</h4>
+      <ul>
+        <li>Check your email inbox (and spam folder)</li>
+        <li>Click the verification link in the email</li>
+        <li>Complete your profile setup</li>
+        <li>Start connecting with amazing people!</li>
+      </ul>
+    </div>
+    
+    <a href="{{ url_for('vibe_form') }}" class="verify-btn">
+      <i class="fas fa-arrow-right"></i> Continue to App
+    </a>
+    
+    <div class="verify-footer">
+      <p>Didn't receive the email? <a href="{{ url_for('otp') }}">Try again</a></p>
     </div>
   </div>
-</body>
-</html>
+</div>
+
+<script>
+  // Add some interactive feedback
+  document.querySelector('.verify-btn').addEventListener('click', function(e) {
+    this.style.transform = 'scale(0.95)';
+    setTimeout(() => {
+      this.style.transform = '';
+    }, 150);
+  });
+  
+  // Add auto-refresh suggestion after 30 seconds
+  setTimeout(() => {
+    const footer = document.querySelector('.verify-footer');
+    const refreshMsg = document.createElement('p');
+    refreshMsg.innerHTML = '<i class="fas fa-info-circle"></i> Still waiting? Try refreshing your email or <a href="{{ url_for("otp") }}">resend the verification email</a>';
+    refreshMsg.style.marginTop = '1rem';
+    refreshMsg.style.fontSize = '0.875rem';
+    refreshMsg.style.color = 'var(--text-light)';
+    footer.appendChild(refreshMsg);
+  }, 30000);
+</script>
+{% endblock %}

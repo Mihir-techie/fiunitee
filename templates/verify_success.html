@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
 {% block title %}Email Verified - Fiunite{% endblock %}
-{% block description %}Your email has been successfully verified. Welcome to Fiunite!{% endblock %}
+{% block description %}Your email has been successfully verified! Welcome to Fiunite.{% endblock %}
 
 {% block extra_css %}
 <style>
   body {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--bg-gradient);
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -16,7 +16,7 @@
   
   .success-container {
     width: 100%;
-    max-width: 450px;
+    max-width: 500px;
     position: relative;
   }
   
@@ -24,7 +24,7 @@
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     border-radius: var(--radius-2xl);
-    padding: 2.5rem;
+    padding: 3rem 2.5rem;
     box-shadow: var(--shadow-2xl);
     border: 1px solid rgba(255, 255, 255, 0.2);
     text-align: center;
@@ -43,17 +43,31 @@
   }
   
   .success-icon {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     background: linear-gradient(135deg, #10b981, #059669);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 1.5rem;
-    font-size: 3rem;
+    margin: 0 auto 2rem;
+    font-size: 3.5rem;
     color: white;
     animation: successPulse 2s infinite;
+    position: relative;
+  }
+  
+  .success-icon::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #10b981, #059669);
+    opacity: 0.3;
+    animation: ripple 2s infinite;
   }
   
   @keyframes successPulse {
@@ -65,37 +79,68 @@
     }
   }
   
+  @keyframes ripple {
+    0% {
+      transform: scale(1);
+      opacity: 0.3;
+    }
+    100% {
+      transform: scale(1.3);
+      opacity: 0;
+    }
+  }
+  
   .success-title {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--text-primary);
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: var(--bg-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin-bottom: 1rem;
   }
   
   .success-message {
     color: var(--text-secondary);
-    font-size: 1rem;
+    font-size: 1.125rem;
     line-height: 1.6;
     margin-bottom: 2rem;
   }
   
   .success-btn {
     width: 100%;
-    padding: 1rem;
+    padding: 1.25rem;
     background: var(--bg-gradient);
     color: white;
     border: none;
     border-radius: var(--radius-lg);
-    font-size: 1.125rem;
+    font-size: 1.25rem;
     font-weight: 600;
     cursor: pointer;
     transition: all var(--transition-normal);
     text-decoration: none;
     display: inline-block;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .success-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+  }
+  
+  .success-btn:hover::before {
+    left: 100%;
   }
   
   .success-btn:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
     box-shadow: var(--shadow-xl);
   }
   
@@ -111,37 +156,77 @@
   
   .floating-element {
     position: absolute;
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 50%;
-    animation: float 6s ease-in-out infinite;
+    animation: float 8s ease-in-out infinite;
   }
   
   .floating-element:nth-child(1) {
-    top: 20%;
+    top: 15%;
     left: 10%;
     animation-delay: 0s;
   }
   
   .floating-element:nth-child(2) {
-    top: 60%;
-    right: 10%;
+    top: 40%;
+    right: 15%;
     animation-delay: 2s;
   }
   
   .floating-element:nth-child(3) {
-    top: 80%;
+    top: 70%;
     left: 20%;
     animation-delay: 4s;
   }
   
+  .floating-element:nth-child(4) {
+    top: 25%;
+    right: 30%;
+    animation-delay: 6s;
+  }
+  
   @keyframes float {
     0%, 100% {
-      transform: translateY(0px);
+      transform: translateY(0px) rotate(0deg);
     }
     50% {
-      transform: translateY(-20px);
+      transform: translateY(-30px) rotate(180deg);
+    }
+  }
+  
+  .auto-redirect {
+    margin-top: 1.5rem;
+    color: var(--text-light);
+    font-size: 0.875rem;
+  }
+  
+  .redirect-countdown {
+    color: var(--primary);
+    font-weight: 600;
+  }
+  
+  @media (max-width: 768px) {
+    .success-title {
+      font-size: 2rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .success-card {
+      padding: 2rem 1.5rem;
+      margin: 1rem;
+    }
+    
+    .success-title {
+      font-size: 1.75rem;
+    }
+    
+    .success-icon {
+      width: 100px;
+      height: 100px;
+      font-size: 3rem;
     }
   }
 </style>
@@ -152,6 +237,7 @@
   <div class="floating-element"></div>
   <div class="floating-element"></div>
   <div class="floating-element"></div>
+  <div class="floating-element"></div>
 </div>
 
 <div class="success-container">
@@ -159,35 +245,51 @@
     <div class="success-icon">
       <i class="fas fa-check"></i>
     </div>
+    
     <h1 class="success-title">Email Verified!</h1>
+    
     <p class="success-message">
-      Congratulations! Your email has been successfully verified. You're now ready to start connecting with amazing people on Fiunite.
+      Awesome! Your email has been successfully verified. You're now ready to start your journey on Fiunite and connect with amazing people who share your vibes.
     </p>
-    <a href="{{ url_for('vibe_form') }}" class="success-btn">
-      <i class="fas fa-rocket"></i> Start Your Journey
+    
+    <a href="{{ url_for('about_page') }}" class="success-btn">
+      <i class="fas fa-user-edit"></i> Complete Your Profile
     </a>
+    
+    <div class="auto-redirect">
+      <p>Automatically redirecting in <span class="redirect-countdown" id="countdown">5</span> seconds...</p>
+    </div>
   </div>
 </div>
 
 <script>
-  // Auto redirect after 5 seconds
-  setTimeout(() => {
-    window.location.href = "{{ url_for('vibe_form') }}";
-  }, 5000);
-  
-  // Show countdown
+  // Auto redirect countdown
   let countdown = 5;
-  const btn = document.querySelector('.success-btn');
-  const originalText = btn.innerHTML;
+  const countdownElement = document.getElementById('countdown');
   
   const timer = setInterval(() => {
-    btn.innerHTML = `<i class="fas fa-rocket"></i> Starting in ${countdown}s`;
     countdown--;
+    countdownElement.textContent = countdown;
     
-    if (countdown < 0) {
+    if (countdown <= 0) {
       clearInterval(timer);
-      btn.innerHTML = originalText;
+      window.location.href = "{{ url_for('about_page') }}";
     }
   }, 1000);
+  
+  // Add celebration animation
+  setTimeout(() => {
+    document.querySelector('.success-message').style.opacity = '1';
+    document.querySelector('.success-message').style.transform = 'translateY(0)';
+  }, 500);
+  
+  // Add hover effects
+  document.querySelector('.success-btn').addEventListener('mouseenter', function() {
+    this.style.transform = 'translateY(-3px) scale(1.02)';
+  });
+  
+  document.querySelector('.success-btn').addEventListener('mouseleave', function() {
+    this.style.transform = 'translateY(-3px) scale(1)';
+  });
 </script>
 {% endblock %}
