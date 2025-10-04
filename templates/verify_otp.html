@@ -1,0 +1,485 @@
+{% extends "base.html" %}
+
+{% block title %}Enter Verification Code - Fiunite{% endblock %}
+{% block description %}Enter the 6-digit verification code sent to your email to complete your Fiunite account setup.{% endblock %}
+
+{% block extra_css %}
+<style>
+  body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+  
+  .otp-container {
+    width: 100%;
+    max-width: 450px;
+    position: relative;
+  }
+  
+  .otp-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-2xl);
+    padding: 2.5rem;
+    box-shadow: var(--shadow-2xl);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: slideInUp 0.8s ease-out;
+  }
+  
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .otp-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .otp-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--bg-gradient);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 2rem;
+    color: white;
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+  
+  .otp-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+  
+  .otp-subtitle {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  
+  .otp-input-container {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin: 2rem 0;
+  }
+  
+  .otp-digit {
+    width: 60px;
+    height: 60px;
+    border: 2px solid var(--bg-tertiary);
+    border-radius: var(--radius-lg);
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.8);
+    transition: all var(--transition-normal);
+  }
+  
+  .otp-digit:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    background: white;
+    transform: scale(1.05);
+  }
+  
+  .otp-digit.filled {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: white;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-input {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    border: 2px solid var(--bg-tertiary);
+    border-radius: var(--radius-lg);
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all var(--transition-normal);
+    background: rgba(255, 255, 255, 0.8);
+  }
+  
+  .form-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    background: white;
+  }
+  
+  .otp-btn {
+    width: 100%;
+    padding: 1rem;
+    background: var(--bg-gradient);
+    color: white;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-size: 1.125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+  
+  .otp-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+  }
+  
+  .otp-btn:hover::before {
+    left: 100%;
+  }
+  
+  .otp-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-xl);
+  }
+  
+  .otp-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  .error-message {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    text-align: center;
+  }
+  
+  .resend-section {
+    text-align: center;
+    margin-top: 1.5rem;
+  }
+  
+  .resend-text {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .resend-btn {
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 0.875rem;
+  }
+  
+  .resend-btn:hover {
+    color: var(--primary-dark);
+  }
+  
+  .resend-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .floating-elements {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+  }
+  
+  .floating-element {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .floating-element:nth-child(1) {
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+  }
+  
+  .floating-element:nth-child(2) {
+    top: 60%;
+    right: 10%;
+    animation-delay: 2s;
+  }
+  
+  .floating-element:nth-child(3) {
+    top: 80%;
+    left: 20%;
+    animation-delay: 4s;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .otp-card {
+      padding: 2rem 1.5rem;
+      margin: 1rem;
+    }
+    
+    .otp-title {
+      font-size: 1.75rem;
+    }
+    
+    .otp-digit {
+      width: 50px;
+      height: 50px;
+      font-size: 1.25rem;
+    }
+    
+    .otp-input-container {
+      gap: 0.5rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="floating-elements">
+  <div class="floating-element"></div>
+  <div class="floating-element"></div>
+  <div class="floating-element"></div>
+</div>
+
+<div class="otp-container">
+  <div class="otp-card">
+    <div class="otp-header">
+      <div class="otp-icon">
+        <i class="fas fa-key"></i>
+      </div>
+      <h1 class="otp-title">Enter Verification Code</h1>
+      <p class="otp-subtitle">
+        We've sent a 6-digit verification code to your email. Enter it below to complete your account setup.
+      </p>
+    </div>
+    
+    <form method="POST" id="otpForm">
+      {% if error %}
+      <div class="error-message">
+        <i class="fas fa-exclamation-circle"></i> {{ error }}
+      </div>
+      {% endif %}
+      
+      <div class="otp-input-container">
+        <input type="text" name="otp" id="otpInput" maxlength="6" class="form-input" style="display: none;" required>
+        <input type="text" class="otp-digit" maxlength="1" data-index="0">
+        <input type="text" class="otp-digit" maxlength="1" data-index="1">
+        <input type="text" class="otp-digit" maxlength="1" data-index="2">
+        <input type="text" class="otp-digit" maxlength="1" data-index="3">
+        <input type="text" class="otp-digit" maxlength="1" data-index="4">
+        <input type="text" class="otp-digit" maxlength="1" data-index="5">
+      </div>
+      
+      <button type="submit" class="otp-btn" id="verifyBtn" disabled>
+        <i class="fas fa-check"></i> Verify Code
+      </button>
+    </form>
+    
+    <div class="resend-section">
+      <p class="resend-text">Didn't receive the code?</p>
+      <button type="button" class="resend-btn" id="resendBtn" onclick="resendCode()">
+        Resend Code
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const otpDigits = document.querySelectorAll('.otp-digit');
+  const otpInput = document.getElementById('otpInput');
+  const verifyBtn = document.getElementById('verifyBtn');
+  const resendBtn = document.getElementById('resendBtn');
+  
+  let otpCode = '';
+  let resendTimer = 0;
+  
+  // Handle OTP digit input
+  otpDigits.forEach((digit, index) => {
+    digit.addEventListener('input', function() {
+      const value = this.value;
+      
+      // Only allow numbers
+      if (!/^\d$/.test(value)) {
+        this.value = '';
+        return;
+      }
+      
+      // Update OTP code
+      updateOTPCode();
+      
+      // Move to next digit
+      if (value && index < otpDigits.length - 1) {
+        otpDigits[index + 1].focus();
+      }
+      
+      // Check if all digits are filled
+      checkOTPComplete();
+    });
+    
+    digit.addEventListener('keydown', function(e) {
+      // Handle backspace
+      if (e.key === 'Backspace' && !this.value && index > 0) {
+        otpDigits[index - 1].focus();
+      }
+      
+      // Handle paste
+      if (e.key === 'v' && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        handlePaste(e);
+      }
+    });
+    
+    digit.addEventListener('paste', function(e) {
+      e.preventDefault();
+      handlePaste(e);
+    });
+  });
+  
+  function updateOTPCode() {
+    otpCode = Array.from(otpDigits).map(digit => digit.value).join('');
+    otpInput.value = otpCode;
+  }
+  
+  function checkOTPComplete() {
+    const isComplete = otpCode.length === 6;
+    verifyBtn.disabled = !isComplete;
+    
+    if (isComplete) {
+      verifyBtn.style.background = 'var(--primary)';
+    } else {
+      verifyBtn.style.background = 'var(--bg-gradient)';
+    }
+  }
+  
+  function handlePaste(e) {
+    const paste = (e.clipboardData || window.clipboardData).getData('text');
+    const numbers = paste.replace(/\D/g, '').slice(0, 6);
+    
+    numbers.split('').forEach((num, index) => {
+      if (otpDigits[index]) {
+        otpDigits[index].value = num;
+      }
+    });
+    
+    updateOTPCode();
+    checkOTPComplete();
+    
+    // Focus last filled digit or next empty digit
+    const lastIndex = Math.min(numbers.length - 1, otpDigits.length - 1);
+    if (otpDigits[lastIndex]) {
+      otpDigits[lastIndex].focus();
+    }
+  }
+  
+  // Form submission
+  document.getElementById('otpForm').addEventListener('submit', function(e) {
+    if (otpCode.length !== 6) {
+      e.preventDefault();
+      alert('Please enter all 6 digits');
+      return;
+    }
+    
+    // Show loading state
+    verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+    verifyBtn.disabled = true;
+  });
+  
+  // Resend functionality
+  function resendCode() {
+    if (resendTimer > 0) return;
+    
+    resendBtn.disabled = true;
+    resendBtn.textContent = 'Sending...';
+    
+    // Simulate resend request
+    setTimeout(() => {
+      resendBtn.textContent = 'Code Sent!';
+      
+      setTimeout(() => {
+        resendBtn.disabled = false;
+        resendBtn.textContent = 'Resend Code';
+        
+        // Start countdown timer
+        startResendTimer();
+      }, 1000);
+    }, 1500);
+  }
+  
+  function startResendTimer() {
+    resendTimer = 30;
+    resendBtn.disabled = true;
+    
+    const timer = setInterval(() => {
+      resendBtn.textContent = `Resend in ${resendTimer}s`;
+      resendTimer--;
+      
+      if (resendTimer < 0) {
+        clearInterval(timer);
+        resendBtn.disabled = false;
+        resendBtn.textContent = 'Resend Code';
+        resendTimer = 0;
+      }
+    }, 1000);
+  }
+  
+  // Auto-focus first digit
+  otpDigits[0].focus();
+</script>
+{% endblock %}
+
+

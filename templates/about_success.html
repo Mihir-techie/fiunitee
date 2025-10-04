@@ -1,0 +1,454 @@
+{% extends "base.html" %}
+
+{% block title %}Profile Complete - Fiunite{% endblock %}
+{% block description %}Your profile has been successfully created! Now start sharing your vibes and connecting with amazing people.{% endblock %}
+
+{% block extra_css %}
+<style>
+  body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+  
+  .success-container {
+    width: 100%;
+    max-width: 500px;
+    position: relative;
+  }
+  
+  .success-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-2xl);
+    padding: 3rem 2.5rem;
+    box-shadow: var(--shadow-2xl);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center;
+    animation: slideInUp 0.8s ease-out;
+  }
+  
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .success-icon {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #10b981, #059669);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 2rem;
+    font-size: 3.5rem;
+    color: white;
+    animation: successPulse 2s infinite;
+    position: relative;
+  }
+  
+  .success-icon::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #10b981, #059669);
+    opacity: 0.3;
+    animation: ripple 2s infinite;
+  }
+  
+  @keyframes successPulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+  
+  @keyframes ripple {
+    0% {
+      transform: scale(1);
+      opacity: 0.3;
+    }
+    100% {
+      transform: scale(1.3);
+      opacity: 0;
+    }
+  }
+  
+  .success-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: var(--bg-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+  }
+  
+  .success-message {
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+  
+  .celebration-stats {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  
+  .stat-item {
+    text-align: center;
+  }
+  
+  .stat-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+  
+  .stat-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+  }
+  
+  .success-btn {
+    width: 100%;
+    padding: 1.25rem;
+    background: var(--bg-gradient);
+    color: white;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-size: 1.25rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    text-decoration: none;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .success-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+  }
+  
+  .success-btn:hover::before {
+    left: 100%;
+  }
+  
+  .success-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-xl);
+  }
+  
+  .floating-elements {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+  }
+  
+  .floating-element {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: float 8s ease-in-out infinite;
+  }
+  
+  .floating-element:nth-child(1) {
+    top: 15%;
+    left: 10%;
+    animation-delay: 0s;
+  }
+  
+  .floating-element:nth-child(2) {
+    top: 40%;
+    right: 15%;
+    animation-delay: 2s;
+  }
+  
+  .floating-element:nth-child(3) {
+    top: 70%;
+    left: 20%;
+    animation-delay: 4s;
+  }
+  
+  .floating-element:nth-child(4) {
+    top: 25%;
+    right: 30%;
+    animation-delay: 6s;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-30px) rotate(180deg);
+    }
+  }
+  
+  .next-steps {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .next-steps-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+  }
+  
+  .steps-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .step-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+  }
+  
+  .step-item i {
+    width: 20px;
+    color: var(--primary);
+    margin-right: 0.75rem;
+  }
+  
+  .confetti {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1000;
+  }
+  
+  .confetti-piece {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: var(--primary);
+    animation: confettiFall 3s linear infinite;
+  }
+  
+  @keyframes confettiFall {
+    0% {
+      transform: translateY(-100vh) rotate(0deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(100vh) rotate(720deg);
+      opacity: 0;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .success-title {
+      font-size: 2rem;
+    }
+    
+    .stats-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .success-card {
+      padding: 2rem 1.5rem;
+      margin: 1rem;
+    }
+    
+    .success-title {
+      font-size: 1.75rem;
+    }
+    
+    .success-icon {
+      width: 100px;
+      height: 100px;
+      font-size: 3rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="floating-elements">
+  <div class="floating-element"></div>
+  <div class="floating-element"></div>
+  <div class="floating-element"></div>
+  <div class="floating-element"></div>
+</div>
+
+<div class="confetti" id="confetti"></div>
+
+<div class="success-container">
+  <div class="success-card">
+    <div class="success-icon">
+      <i class="fas fa-user-check"></i>
+    </div>
+    <h1 class="success-title">Profile Complete!</h1>
+    <p class="success-message">
+      Awesome! We've learned so much about you. Your profile is now complete and you're ready to start your journey on Fiunite. Let's find you some amazing vibe matches!
+    </p>
+    
+    <div class="celebration-stats">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span class="stat-number">100%</span>
+          <span class="stat-label">Profile Complete</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">Ready</span>
+          <span class="stat-label">To Connect</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">∞</span>
+          <span class="stat-label">Possibilities</span>
+        </div>
+      </div>
+    </div>
+    
+    <a href="{{ url_for('vibe_form') }}" class="success-btn">
+      <i class="fas fa-magic"></i> Share Your First Vibe
+    </a>
+    
+    <div class="next-steps">
+      <h3 class="next-steps-title">What's Next?</h3>
+      <ul class="steps-list">
+        <li class="step-item">
+          <i class="fas fa-heart"></i>
+          <span>Share your current vibe and activity interests</span>
+        </li>
+        <li class="step-item">
+          <i class="fas fa-search"></i>
+          <span>Discover people with matching vibes</span>
+        </li>
+        <li class="step-item">
+          <i class="fas fa-handshake"></i>
+          <span>Connect and start meaningful conversations</span>
+        </li>
+        <li class="step-item">
+          <i class="fas fa-users"></i>
+          <span>Build amazing friendships and connections</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Create confetti animation
+  function createConfetti() {
+    const confetti = document.getElementById('confetti');
+    const colors = ['#6366f1', '#ec4899', '#f59e0b', '#10b981', '#8b5cf6'];
+    
+    for (let i = 0; i < 50; i++) {
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      piece.style.left = Math.random() * 100 + '%';
+      piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      piece.style.animationDelay = Math.random() * 3 + 's';
+      piece.style.animationDuration = (Math.random() * 3 + 2) + 's';
+      confetti.appendChild(piece);
+      
+      // Remove confetti piece after animation
+      setTimeout(() => {
+        piece.remove();
+      }, 5000);
+    }
+  }
+  
+  // Start confetti animation
+  createConfetti();
+  
+  // Auto redirect after 10 seconds
+  let countdown = 10;
+  const btn = document.querySelector('.success-btn');
+  const originalText = btn.innerHTML;
+  
+  const timer = setInterval(() => {
+    if (countdown > 0) {
+      btn.innerHTML = `<i class="fas fa-magic"></i> Starting in ${countdown}s`;
+      countdown--;
+    } else {
+      clearInterval(timer);
+      window.location.href = "{{ url_for('vibe_form') }}";
+    }
+  }, 1000);
+  
+  // Add celebration sound effect (optional)
+  function playCelebrationSound() {
+    // You can add a subtle sound effect here if desired
+    console.log('🎉 Profile complete celebration!');
+  }
+  
+  // Play sound on page load
+  setTimeout(playCelebrationSound, 500);
+  
+  // Add hover effects to stats
+  document.querySelectorAll('.stat-item').forEach(stat => {
+    stat.addEventListener('mouseenter', function() {
+      this.style.transform = 'scale(1.05)';
+      this.style.transition = 'transform 0.3s ease';
+    });
+    
+    stat.addEventListener('mouseleave', function() {
+      this.style.transform = 'scale(1)';
+    });
+  });
+  
+  // Add success message animation
+  setTimeout(() => {
+    document.querySelector('.success-message').style.opacity = '1';
+    document.querySelector('.success-message').style.transform = 'translateY(0)';
+  }, 500);
+</script>
+{% endblock %}

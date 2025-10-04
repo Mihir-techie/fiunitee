@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Selfie Uploaded - Fiunite</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="center">
+    <div class="card">
+      <div class="logo">Uploaded ✅</div>
+      <p>Your selfie was uploaded. Our verification team will review it.</p>
+      <a href="{{ url_for('vibe_form') }}" class="btn-gradient">Continue</a>
+    </div>
+  </div>
+</body>
+</html>

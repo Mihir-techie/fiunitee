@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Verification Sent - Fiunite</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="center">
+    <div class="card">
+      <div class="logo">Check your email</div>
+      <p>Verification link sent to {{ email }}. Open your inbox and click the link.</p>
+      <a href="{{ url_for('vibe_form') }}" class="btn-outline">Return</a>
+    </div>
+  </div>
+</body>
+</html>

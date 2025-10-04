@@ -1,0 +1,401 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up - Fiunite{% endblock %}
+{% block description %}Join Fiunite today and start connecting with amazing people through shared vibes and activities.{% endblock %}
+
+{% block extra_css %}
+<style>
+  body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+  
+  .signup-container {
+    width: 100%;
+    max-width: 450px;
+    position: relative;
+  }
+  
+  .signup-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-2xl);
+    padding: 2.5rem;
+    box-shadow: var(--shadow-2xl);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: slideInUp 0.8s ease-out;
+  }
+  
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .signup-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .signup-logo {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: var(--bg-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+  }
+  
+  .signup-subtitle {
+    color: var(--text-secondary);
+    font-size: 1rem;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-input {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    border: 2px solid var(--bg-tertiary);
+    border-radius: var(--radius-lg);
+    font-size: 1rem;
+    font-family: inherit;
+    transition: all var(--transition-normal);
+    background: rgba(255, 255, 255, 0.8);
+  }
+  
+  .form-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    background: white;
+  }
+  
+  .form-input::placeholder {
+    color: var(--text-light);
+  }
+  
+  .signup-btn {
+    width: 100%;
+    padding: 1rem;
+    background: var(--bg-gradient);
+    color: white;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-size: 1.125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .signup-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+  }
+  
+  .signup-btn:hover::before {
+    left: 100%;
+  }
+  
+  .signup-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-xl);
+  }
+  
+  .signup-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: var(--text-secondary);
+  }
+  
+  .signup-footer a {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+  
+  .signup-footer a:hover {
+    color: var(--primary-dark);
+  }
+  
+  .divider {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0;
+    color: var(--text-light);
+  }
+  
+  .divider::before,
+  .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--bg-tertiary);
+  }
+  
+  .divider span {
+    padding: 0 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .floating-elements {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+  }
+  
+  .floating-element {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .floating-element:nth-child(1) {
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+  }
+  
+  .floating-element:nth-child(2) {
+    top: 60%;
+    right: 10%;
+    animation-delay: 2s;
+  }
+  
+  .floating-element:nth-child(3) {
+    top: 80%;
+    left: 20%;
+    animation-delay: 4s;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+  
+  .error-message {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .success-message {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #16a34a;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .password-strength {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  .strength-weak { color: #dc2626; }
+  .strength-medium { color: #d97706; }
+  .strength-strong { color: #16a34a; }
+  
+  @media (max-width: 480px) {
+    .signup-card {
+      padding: 2rem 1.5rem;
+      margin: 1rem;
+    }
+    
+    .signup-logo {
+      font-size: 2rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="floating-elements">
+  <div class="floating-element"></div>
+  <div class="floating-element"></div>
+  <div class="floating-element"></div>
+</div>
+
+<div class="signup-container">
+  <div class="signup-card">
+    <div class="signup-header">
+      <h1 class="signup-logo">
+        <i class="fas fa-user-plus"></i> Join Fiunite
+      </h1>
+      <p class="signup-subtitle">Create your account and start your journey</p>
+    </div>
+    
+    <form method="POST">
+      <div class="form-group">
+        <input 
+          type="text" 
+          name="name" 
+          placeholder="Enter your full name" 
+          class="form-input"
+          required
+        >
+      </div>
+      
+      <div class="form-group">
+        <input 
+          type="email" 
+          name="email" 
+          placeholder="Enter your email" 
+          class="form-input"
+          required
+        >
+      </div>
+      
+      <div class="form-group">
+        <input 
+          type="password" 
+          name="password" 
+          placeholder="Create a password" 
+          class="form-input"
+          id="password"
+          required
+        >
+        <div class="password-strength" id="password-strength"></div>
+      </div>
+      
+      <button type="submit" class="signup-btn">
+        <i class="fas fa-rocket"></i> Create Account
+      </button>
+    </form>
+    
+    <div class="divider">
+      <span>or</span>
+    </div>
+    
+    <div class="signup-footer">
+      <p>Already have an account? <a href="/login">Sign in here</a></p>
+      <p style="margin-top: 1rem; font-size: 0.875rem;">
+        <a href="/welcome">← Back to Home</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Password strength indicator
+  const passwordInput = document.getElementById('password');
+  const strengthIndicator = document.getElementById('password-strength');
+  
+  passwordInput.addEventListener('input', function() {
+    const password = this.value;
+    const strength = checkPasswordStrength(password);
+    
+    if (password.length === 0) {
+      strengthIndicator.textContent = '';
+      return;
+    }
+    
+    strengthIndicator.textContent = `Password strength: ${strength.text}`;
+    strengthIndicator.className = `password-strength strength-${strength.level}`;
+  });
+  
+  function checkPasswordStrength(password) {
+    let score = 0;
+    
+    if (password.length >= 8) score++;
+    if (/[a-z]/.test(password)) score++;
+    if (/[A-Z]/.test(password)) score++;
+    if (/[0-9]/.test(password)) score++;
+    if (/[^A-Za-z0-9]/.test(password)) score++;
+    
+    if (score < 3) return { level: 'weak', text: 'Weak' };
+    if (score < 5) return { level: 'medium', text: 'Medium' };
+    return { level: 'strong', text: 'Strong' };
+  }
+  
+  // Form validation
+  document.querySelector('form').addEventListener('submit', function(e) {
+    const name = this.querySelector('input[name="name"]');
+    const email = this.querySelector('input[name="email"]');
+    const password = this.querySelector('input[name="password"]');
+    
+    // Remove existing messages
+    const existingMessage = this.querySelector('.error-message, .success-message');
+    if (existingMessage) {
+      existingMessage.remove();
+    }
+    
+    // Validation
+    if (!name.value || !email.value || !password.value) {
+      e.preventDefault();
+      showMessage('Please fill in all fields', 'error');
+    } else if (!isValidEmail(email.value)) {
+      e.preventDefault();
+      showMessage('Please enter a valid email address', 'error');
+    } else if (password.value.length < 6) {
+      e.preventDefault();
+      showMessage('Password must be at least 6 characters long', 'error');
+    } else if (name.value.length < 2) {
+      e.preventDefault();
+      showMessage('Name must be at least 2 characters long', 'error');
+    }
+  });
+  
+  function showMessage(message, type) {
+    const form = document.querySelector('form');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `${type}-message`;
+    messageDiv.innerHTML = `<i class="fas fa-${type === 'error' ? 'exclamation-circle' : 'check-circle'}"></i> ${message}`;
+    form.insertBefore(messageDiv, form.firstChild);
+  }
+  
+  function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+  
+  // Add focus animations
+  document.querySelectorAll('.form-input').forEach(input => {
+    input.addEventListener('focus', function() {
+      this.parentElement.style.transform = 'scale(1.02)';
+    });
+    
+    input.addEventListener('blur', function() {
+      this.parentElement.style.transform = 'scale(1)';
+    });
+  });
+</script>
+{% endblock %}

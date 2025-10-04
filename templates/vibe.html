@@ -1,0 +1,505 @@
+{% extends "base.html" %}
+
+{% block title %}Vibe Matches - Fiunite{% endblock %}
+{% block description %}Discover amazing people with matching vibes and activities near you on Fiunite.{% endblock %}
+
+{% block extra_css %}
+<style>
+  body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+  
+  .vibes-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .vibes-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    color: white;
+  }
+  
+  .vibes-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    animation: fadeInUp 1s ease-out;
+  }
+  
+  .vibes-subtitle {
+    font-size: 1.25rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+    animation: fadeInUp 1s ease-out 0.2s both;
+  }
+  
+  .vibes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+  
+  .vibe-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-2xl);
+    padding: 2rem;
+    box-shadow: var(--shadow-2xl);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
+    animation: slideInUp 0.8s ease-out both;
+  }
+  
+  .vibe-card:nth-child(1) { animation-delay: 0.1s; }
+  .vibe-card:nth-child(2) { animation-delay: 0.2s; }
+  .vibe-card:nth-child(3) { animation-delay: 0.3s; }
+  .vibe-card:nth-child(4) { animation-delay: 0.4s; }
+  .vibe-card:nth-child(5) { animation-delay: 0.5s; }
+  .vibe-card:nth-child(6) { animation-delay: 0.6s; }
+  
+  .vibe-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--bg-gradient);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+  }
+  
+  .vibe-card:hover::before {
+    opacity: 1;
+  }
+  
+  .vibe-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+  }
+  
+  .vibe-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .vibe-avatar {
+    width: 60px;
+    height: 60px;
+    background: var(--bg-gradient);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    margin-right: 1rem;
+    font-weight: bold;
+  }
+  
+  .vibe-user-info {
+    flex: 1;
+  }
+  
+  .vibe-username {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+  }
+  
+  .vibe-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: var(--primary);
+    color: white;
+    border-radius: var(--radius-full);
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  .vibe-details {
+    margin-bottom: 1.5rem;
+  }
+  
+  .vibe-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--bg-tertiary);
+  }
+  
+  .vibe-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+  
+  .vibe-item i {
+    width: 20px;
+    color: var(--primary);
+    margin-right: 0.75rem;
+    font-size: 1rem;
+  }
+  
+  .vibe-item span {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+  }
+  
+  .vibe-item strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+  
+  .vibe-actions {
+    display: flex;
+    gap: 0.75rem;
+  }
+  
+  .vibe-btn {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    text-decoration: none;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  .vibe-btn-primary {
+    background: var(--bg-gradient);
+    color: white;
+  }
+  
+  .vibe-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+  
+  .vibe-btn-secondary {
+    background: transparent;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+  }
+  
+  .vibe-btn-secondary:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+  }
+  
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: white;
+  }
+  
+  .empty-state i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.7;
+  }
+  
+  .empty-state h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .empty-state p {
+    font-size: 1.125rem;
+    opacity: 0.8;
+    margin-bottom: 2rem;
+  }
+  
+  .floating-elements {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+  }
+  
+  .floating-element {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .floating-element:nth-child(1) {
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+  }
+  
+  .floating-element:nth-child(2) {
+    top: 60%;
+    right: 10%;
+    animation-delay: 2s;
+  }
+  
+  .floating-element:nth-child(3) {
+    top: 80%;
+    left: 20%;
+    animation-delay: 4s;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .stats-bar {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.5rem;
+    margin-bottom: 2rem;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(10px);
+  }
+  
+  .stat-item {
+    text-align: center;
+  }
+  
+  .stat-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    display: block;
+  }
+  
+  .stat-label {
+    font-size: 0.875rem;
+    opacity: 0.8;
+  }
+  
+  @media (max-width: 768px) {
+    .vibes-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .vibes-title {
+      font-size: 2rem;
+    }
+    
+    .stats-bar {
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .vibe-actions {
+      flex-direction: column;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .vibe-card {
+      padding: 1.5rem;
+    }
+    
+    .vibes-title {
+      font-size: 1.75rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="floating-elements">
+  <div class="floating-element"></div>
+  <div class="floating-element"></div>
+  <div class="floating-element"></div>
+</div>
+
+<div class="vibes-container">
+  <div class="vibes-header">
+    <h1 class="vibes-title">
+      <i class="fas fa-heart"></i> Vibe Matches
+    </h1>
+    <p class="vibes-subtitle">Discover amazing people who share your interests and energy</p>
+  </div>
+  
+  {% if vibes %}
+  <div class="stats-bar">
+    <div class="stat-item">
+      <span class="stat-number">{{ vibes|length }}</span>
+      <span class="stat-label">Matches Found</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number">Active Now</span>
+      <span class="stat-label">Live Vibes</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number">Near You</span>
+      <span class="stat-label">Local Area</span>
+    </div>
+  </div>
+  
+  <div class="vibes-grid">
+    {% for v in vibes %}
+    <div class="vibe-card">
+      <div class="vibe-header">
+        <div class="vibe-avatar">
+          {{ v[0][0].upper() }}
+        </div>
+        <div class="vibe-user-info">
+          <div class="vibe-username">{{ v[0] }}</div>
+          <span class="vibe-badge">{{ v[1] }} Vibe</span>
+        </div>
+      </div>
+      
+      <div class="vibe-details">
+        <div class="vibe-item">
+          <i class="fas fa-gamepad"></i>
+          <span>Activity: <strong>{{ v[2] }}</strong></span>
+        </div>
+        
+        <div class="vibe-item">
+          <i class="fas fa-calendar"></i>
+          <span>Date: <strong>{{ v[3] }}</strong></span>
+        </div>
+        
+        <div class="vibe-item">
+          <i class="fas fa-clock"></i>
+          <span>Time: <strong>{{ v[4] }} - {{ v[5] }}</strong></span>
+        </div>
+        
+        <div class="vibe-item">
+          <i class="fas fa-map-marker-alt"></i>
+          <span>Location: <strong>Near You</strong></span>
+        </div>
+      </div>
+      
+      <div class="vibe-actions">
+        <button class="vibe-btn vibe-btn-primary" onclick="connectWithUser('{{ v[0] }}')">
+          <i class="fas fa-heart"></i> Connect
+        </button>
+        <button class="vibe-btn vibe-btn-secondary" onclick="viewProfile('{{ v[0] }}')">
+          <i class="fas fa-user"></i> Profile
+        </button>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  
+  {% else %}
+  <div class="empty-state">
+    <i class="fas fa-search"></i>
+    <h3>No vibes found yet</h3>
+    <p>Be the first to share your vibe and start connecting with amazing people!</p>
+    <a href="/vibe_form" class="btn btn-gradient btn-lg">
+      <i class="fas fa-plus"></i> Share Your Vibe
+    </a>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+  // Connect with user functionality
+  function connectWithUser(username) {
+    // Add connection logic here
+    const btn = event.target.closest('.vibe-btn-primary');
+    const originalText = btn.innerHTML;
+    
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connecting...';
+    btn.disabled = true;
+    
+    // Simulate connection process
+    setTimeout(() => {
+      btn.innerHTML = '<i class="fas fa-check"></i> Connected!';
+      btn.style.background = '#10b981';
+      
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        btn.style.background = '';
+      }, 2000);
+    }, 1500);
+  }
+  
+  // View profile functionality
+  function viewProfile(username) {
+    // Add profile view logic here
+    alert(`Viewing profile of ${username}`);
+  }
+  
+  // Add intersection observer for animations
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animate-fade-in');
+      }
+    });
+  }, observerOptions);
+  
+  // Observe all vibe cards
+  document.querySelectorAll('.vibe-card').forEach(card => {
+    observer.observe(card);
+  });
+  
+  // Add hover effects
+  document.querySelectorAll('.vibe-btn').forEach(btn => {
+    btn.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-2px) scale(1.05)';
+    });
+    
+    btn.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(0) scale(1)';
+    });
+  });
+</script>
+{% endblock %}

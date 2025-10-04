@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Confirm Identity - Fiunite</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="center">
+    <form method="POST" enctype="multipart/form-data" class="card">
+      <div class="logo">Confirm Who You Are</div>
+      <p>Please take/upload a clear selfie for identity verification.</p>
+      <input type="file" name="selfie" accept="image/*" capture="user" required>
+      <button type="submit" class="btn-gradient">Upload Selfie</button>
+    </form>
+  </div>
+</body>
+</html>
